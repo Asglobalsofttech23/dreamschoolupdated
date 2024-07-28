@@ -918,8 +918,8 @@ function AllStudents() {
                   {firstIndexOfData + index + 1}
                 </StyledTableCell>
                 <StyledTableCell align="right">{row.stu_name}</StyledTableCell>
-                <StyledTableCell align="right">{formatDate(row.date_of_birth)}</StyledTableCell>
-                <StyledTableCell align="right">{getClassName(row.class)}</StyledTableCell>
+                <StyledTableCell align="right">{formatDate(row.dob)}</StyledTableCell>
+                <StyledTableCell align="right">{getClassName(row.cls_id)}</StyledTableCell>
                 <StyledTableCell align="right">{formatDate(row.date_of_join)}</StyledTableCell>
                 <StyledTableCell align="right">{row.aadhar_no}</StyledTableCell>
                 <StyledTableCell align="right">{row.father_name}</StyledTableCell>
@@ -932,8 +932,8 @@ function AllStudents() {
                 <StyledTableCell align="right">{row.bookingfees}</StyledTableCell>
                 <StyledTableCell align="right">{row.Totalfees}</StyledTableCell>
                 <StyledTableCell align="right">
-                  <Link to={'/'}>
-                  <Button variant="contained" color='success' fullWidth startIcon={<AddIcon/>} onClick={() => handleDlt(row.stu_id)}>
+                  <Link to={`/payfees/${row.stu_id}`}>
+                  <Button variant="contained" color='success' fullWidth startIcon={<AddIcon/>} >
                     Pay Fees
                   </Button>
                   </Link>

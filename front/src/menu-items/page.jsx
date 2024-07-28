@@ -18,7 +18,7 @@ const pages = {
       id: 'login1',
       title: 'Logout',
       type: 'item',
-      url: '/',
+      url: '',
       icon: icons.LoginOutlined,
       target: true
     },

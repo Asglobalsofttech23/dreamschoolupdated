@@ -65,6 +65,10 @@ const VanStudent = () => {
   const handleAddStudent = () => {
     // Logic to handle adding a student can go here
   };
+  const getClassName = (classId) => {
+    const classData = clsData.find(cls => cls.cls_id == classId);
+    return classData ? classData.cls_name : 'N/A';
+  };
 
   const filteredStudents = students.filter(student =>
     student.stu_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -104,7 +108,7 @@ const VanStudent = () => {
                 <TableCell>Name</TableCell>
                 {/* <TableCell>Aadhar</TableCell> */}
                 <TableCell>Gender</TableCell>
-                <TableCell>DOB</TableCell>
+                <TableCell>Class</TableCell>
                 <TableCell>Van</TableCell>
                 {/* Add more columns as needed */}
               </TableRow>
@@ -116,7 +120,7 @@ const VanStudent = () => {
                   <TableCell>{student.stu_name}</TableCell>
                   {/* <TableCell>{student.stu_aadhar}</TableCell> */}
                   <TableCell>{student.gender}</TableCell>
-                  <TableCell>{formatDate(student.dob)}</TableCell>
+                  <TableCell >{getClassName(student.cls_id)}</TableCell>
                   <TableCell>{student.van_student}</TableCell>
                   {/* Add more cells as needed */}
                 </TableRow>

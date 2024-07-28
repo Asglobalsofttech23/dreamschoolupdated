@@ -198,6 +198,16 @@ app.put('/allfeesalloc/:stu_id', async (req, res) => {
       res.status(500).json({ message: "Internal server error." });
     }
   })
+  app.get('/schemestudents', async (req, res) => {
+    try {
+      const query = 'SELECT * FROM students_master WHERE scheme_student = "yes"';
+      const [rows] = await db.query(query);
+      res.status(200).json(rows);
+    } catch (err) {
+      console.log("Error fetching van students:", err);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  })
 
 //   app.get('/students/:classId', async (req, res) => {
     

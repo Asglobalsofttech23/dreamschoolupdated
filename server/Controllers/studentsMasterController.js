@@ -184,166 +184,234 @@ module.exports = (db, upload) => {
   });
   
 
-  router.put(
-    "/updateStudent/:stu_id",
-    upload.single("stu_img"),
-    async (req, res) => {
-      try {
-        const stuId = req.params.stu_id;
-        const {
-          staff_id,
-          cls_id,
-          scheme,
-          stu_name,
-          stu_aadhar,
-          gender,
-          dob,
-          van,
-          community,
-          cast_name,
-          religion,
-          father_name,
-          father_mobile,
-          father_occupation,
-          father_annual_income,
-          mother_name,
-          mother_mobile,
-          mother_occupation,
-          mother_annual_income,
-          address,
-        } = req.body;
-        const stu_img = req.file ? req.file.filename : null;
+  // router.put("/updateStudent/:stu_id",
+  //   upload.single("stu_img"),
+  //   async (req, res) => {
+  //     try {
+  //       const stuId = req.params.stu_id;
+  //       const {
+  //         staff_id,
+  //         cls_id,
+  //         scheme,
+  //         stu_name,
+  //         stu_aadhar,
+  //         gender,
+  //         dob,
+  //         van,
+  //         community,
+  //         cast_name,
+  //         religion,
+  //         father_name,
+  //         father_mobile,
+  //         father_occupation,
+  //         father_annual_income,
+  //         mother_name,
+  //         mother_mobile,
+  //         mother_occupation,
+  //         mother_annual_income,
+  //         address,
+  //       } = req.body;
+  //       const stu_img = req.file ? req.file.filename : null;
 
-        if (
-          !staff_id ||
-          !cls_id ||
+  //       if (
+  //         !staff_id ||
+  //         !cls_id ||
           
-          !stu_name ||
-          !stu_aadhar ||
-          !gender ||
-          !dob ||
-          !van ||
-          !community ||
-          !cast_name ||
-          !religion ||
-          !father_name ||
-          !father_mobile ||
-          !father_occupation ||
-          !father_annual_income ||
-          !mother_name ||
-          !mother_mobile ||
-          !mother_occupation ||
-          !mother_annual_income ||
-          !address
-        ) {
-          return res.status(400).json({ message: "All fields are required." });
-        }
+  //         !stu_name ||
+  //         !stu_aadhar ||
+  //         !gender ||
+  //         !dob ||
+  //         !van ||
+  //         !community ||
+  //         !cast_name ||
+  //         !religion ||
+  //         !father_name ||
+  //         !father_mobile ||
+  //         !father_occupation ||
+  //         !father_annual_income ||
+  //         !mother_name ||
+  //         !mother_mobile ||
+  //         !mother_occupation ||
+  //         !mother_annual_income ||
+  //         !address
+  //       ) {
+  //         return res.status(400).json({ message: "All fields are required." });
+  //       }
 
-        const existingStudentQuery = `SELECT * FROM students_master WHERE stu_aadhar = ? AND stu_id != ?`;
-        const [existingStudentResult] = await db.query(existingStudentQuery, [
-          stu_aadhar,
-          stuId,
+  //       const existingStudentQuery = `SELECT * FROM students_master WHERE stu_aadhar = ? AND stu_id != ?`;
+  //       const [existingStudentResult] = await db.query(existingStudentQuery, [
+  //         stu_aadhar,
+  //         stuId,
+  //       ]);
+
+  //       if (existingStudentResult.length > 0) {
+  //         return res
+  //           .status(400)
+  //           .json({
+  //             message: "Student already exists with the same Aadhar number.",
+  //           });
+  //       }
+
+  //       const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+
+  //       let updateQuery = ``;
+  //       let updateParams = [];
+
+  //       if (stu_img) {
+  //         updateQuery = `
+  //                   UPDATE students_master 
+  //                   SET staff_id = ?, cls_id = ?, scheme = ?, stu_name = ?, stu_aadhar = ?, stu_img = ?, gender = ?, dob = ?, van=?
+  //                       community = ?, cast_name = ?, religion = ?, father_name = ?, father_mobile = ?, father_occupation = ?, 
+  //                       father_annual_income = ?, mother_name = ?, mother_mobile = ?, mother_occupation = ?, 
+  //                       mother_annual_income = ?, address = ?, updated_at = ? 
+  //                   WHERE stu_id = ?
+  //               `;
+  //         updateParams = [
+  //           staff_id,
+  //           cls_id,
+  //           scheme,
+  //           stu_name,
+  //           stu_aadhar,
+  //           stu_img,
+  //           gender,
+  //           dob,
+  //           van,
+  //           community,
+  //           cast_name,
+  //           religion,
+  //           father_name,
+  //           father_mobile,
+  //           father_occupation,
+  //           father_annual_income,
+  //           mother_name,
+  //           mother_mobile,
+  //           mother_occupation,
+  //           mother_annual_income,
+  //           address,
+  //           currentDate,
+  //           stuId,
+  //         ];
+  //       } else {
+  //         updateQuery = `
+  //                   UPDATE students_master 
+  //                   SET staff_id = ?, cls_id = ?, scheme = ?, stu_name = ?, stu_aadhar = ?, gender = ?, dob = ?, van=?
+  //                       community = ?, cast_name = ?, religion = ?, father_name = ?, father_mobile = ?, father_occupation = ?, 
+  //                       father_annual_income = ?, mother_name = ?, mother_mobile = ?, mother_occupation = ?, 
+  //                       mother_annual_income = ?, address = ?, updated_at = ? 
+  //                   WHERE stu_id = ?
+  //               `;
+  //         updateParams = [
+  //           staff_id,
+  //           cls_id,
+  //           scheme,
+  //           stu_name,
+  //           stu_aadhar,
+  //           gender,
+  //           dob,
+  //           van,
+  //           community,
+  //           cast_name,
+  //           religion,
+  //           father_name,
+  //           father_mobile,
+  //           father_occupation,
+  //           father_annual_income,
+  //           mother_name,
+  //           mother_mobile,
+  //           mother_occupation,
+  //           mother_annual_income,
+  //           address,
+  //           currentDate,
+  //           stuId,
+  //         ];
+  //       }
+
+  //       const [results] = await db.query(updateQuery, updateParams);
+
+  //       if (results.affectedRows === 0) {
+  //         return res
+  //           .status(404)
+  //           .json({ message: "Student data not found or no changes made." });
+  //       } else {
+  //         return res
+  //           .status(200)
+  //           .json({ message: "Student data updated successfully." });
+  //       }
+  //     } catch (err) {
+  //       console.log("Error updating student data:", err);
+  //       return res.status(500).json({ message: "Internal server error." });
+  //     }
+  //   }
+  // );
+
+  router.put("/updateStudent/:id", async (req, res) => {
+    try {
+        const stuId = req.params.id;
+        const {
+            stu_name,
+            aadhar_no,
+            gender,
+            dob,
+            date_of_join,
+            cls_id,
+            community,
+            father_name,
+            father_mobile,
+            mother_name,
+            mother_mobile,
+            bookingfees,
+            address,
+            Totalfees
+        } = req.body;
+
+        const updateQuery = `
+            UPDATE students_master 
+            SET 
+                stu_name = ?, 
+                stu_aadhar = ?, 
+                gender = ?, 
+                dob = ?, 
+                date_of_join = ?, 
+                cls_id = ?, 
+                community = ?, 
+                father_name = ?, 
+                father_mobile = ?, 
+                mother_name = ?, 
+                mother_mobile = ?, 
+                bookingfees = ?, 
+                address = ?, 
+                total_fees = ?
+            WHERE stu_id = ?
+        `;
+
+        const [results] = await db.query(updateQuery, [
+            stu_name,
+            aadhar_no,
+            gender,
+            dob,
+            date_of_join,
+            cls_id,
+            community,
+            father_name,
+            father_mobile,
+            mother_name,
+            mother_mobile,
+            bookingfees,
+            address,
+            Totalfees,
+            stuId
         ]);
 
-        if (existingStudentResult.length > 0) {
-          return res
-            .status(400)
-            .json({
-              message: "Student already exists with the same Aadhar number.",
-            });
-        }
-
-        const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
-
-        let updateQuery = ``;
-        let updateParams = [];
-
-        if (stu_img) {
-          updateQuery = `
-                    UPDATE students_master 
-                    SET staff_id = ?, cls_id = ?, scheme = ?, stu_name = ?, stu_aadhar = ?, stu_img = ?, gender = ?, dob = ?, van=?
-                        community = ?, cast_name = ?, religion = ?, father_name = ?, father_mobile = ?, father_occupation = ?, 
-                        father_annual_income = ?, mother_name = ?, mother_mobile = ?, mother_occupation = ?, 
-                        mother_annual_income = ?, address = ?, updated_at = ? 
-                    WHERE stu_id = ?
-                `;
-          updateParams = [
-            staff_id,
-            cls_id,
-            scheme,
-            stu_name,
-            stu_aadhar,
-            stu_img,
-            gender,
-            dob,
-            van,
-            community,
-            cast_name,
-            religion,
-            father_name,
-            father_mobile,
-            father_occupation,
-            father_annual_income,
-            mother_name,
-            mother_mobile,
-            mother_occupation,
-            mother_annual_income,
-            address,
-            currentDate,
-            stuId,
-          ];
-        } else {
-          updateQuery = `
-                    UPDATE students_master 
-                    SET staff_id = ?, cls_id = ?, scheme = ?, stu_name = ?, stu_aadhar = ?, gender = ?, dob = ?, van=?
-                        community = ?, cast_name = ?, religion = ?, father_name = ?, father_mobile = ?, father_occupation = ?, 
-                        father_annual_income = ?, mother_name = ?, mother_mobile = ?, mother_occupation = ?, 
-                        mother_annual_income = ?, address = ?, updated_at = ? 
-                    WHERE stu_id = ?
-                `;
-          updateParams = [
-            staff_id,
-            cls_id,
-            scheme,
-            stu_name,
-            stu_aadhar,
-            gender,
-            dob,
-            van,
-            community,
-            cast_name,
-            religion,
-            father_name,
-            father_mobile,
-            father_occupation,
-            father_annual_income,
-            mother_name,
-            mother_mobile,
-            mother_occupation,
-            mother_annual_income,
-            address,
-            currentDate,
-            stuId,
-          ];
-        }
-
-        const [results] = await db.query(updateQuery, updateParams);
-
         if (results.affectedRows === 0) {
-          return res
-            .status(404)
-            .json({ message: "Student data not found or no changes made." });
+            return res.status(404).json({ message: "Student data not found or no data updated" });
         } else {
-          return res
-            .status(200)
-            .json({ message: "Student data updated successfully." });
+            return res.status(200).json({ message: "Student data updated successfully." });
         }
-      } catch (err) {
+    } catch (err) {
         console.log("Error updating student data:", err);
         return res.status(500).json({ message: "Internal server error." });
-      }
     }
-  );
+});
 
   router.delete("/deleteStudent/:stuId", async (req, res) => {
     try {
@@ -367,6 +435,10 @@ module.exports = (db, upload) => {
       return res.status(500).json({ message: "Internal server error." });
     }
   });
+
+  
+  
+
 
   router.get("/getSiblings", async (req, res) => {
     try {
@@ -434,6 +506,7 @@ router.post('/studentsattenance', async (req, res) => {
   }
 });
 
+
 router.get(`/detailattenance/:staff_id`,async(req,res)=>{
 try{
   const staff_id= req.params.staff_id
@@ -452,6 +525,8 @@ try{
 }
 
 })
+
+
 router.post('/saveStudentMarks', (req, res) => {
   const { body } = req;
 
@@ -656,6 +731,88 @@ router.get("/getEnquiryStudents", async (req, res) => {
   }
 });
 
+router.delete("/deleteEnquiryStudent/:id", async (req, res) => {
+  try {
+    const stuId = req.params.id;  // Correctly extract the parameter
+    console.log("Received student ID for deletion:", stuId);  // Debug log
+    if (!stuId) {
+      return res.status(400).json({ message: "Student ID is required." });
+    }
+    const deleteQuery = `DELETE FROM student_enquiry WHERE id = ?`;
+    const [results] = await db.query(deleteQuery, [stuId]);
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Student data not found or no data deleted" });
+    } else {
+      return res.status(200).json({ message: "Student data deleted successfully." });
+    }
+  } catch (err) {
+    console.log("Error deleting student data :", err);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+router.put("/updateEnquiryStudent/:id", async (req, res) => {
+  try {
+    const stuId = req.params.id;
+    console.log(stuId);
+    const {
+      student_name,
+      aadhar_no,
+      gender,
+      date_of_birth,
+      class: classId,
+      community,
+      father_name,
+      father_mobile,
+      mother_name,
+      mother_mobile,
+      address,
+    } = req.body;
+
+    const updateQuery = `
+      UPDATE student_enquiry
+      SET 
+        student_name = ?, 
+        aadhar_no = ?, 
+        gender = ?, 
+        date_of_birth = ?, 
+        class = ?, 
+        community = ?, 
+        father_name = ?, 
+        father_mobile = ?, 
+        mother_name = ?, 
+        mother_mobile = ?, 
+        address = ?
+      WHERE id = ?
+    `;
+
+    const [results] = await db.query(updateQuery, [
+      student_name,
+      aadhar_no,
+      gender,
+      date_of_birth,
+      classId,
+      community,
+      father_name,
+      father_mobile,
+      mother_name,
+      mother_mobile,
+      address,
+      stuId,
+    ]);
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Student data not found or no data updated" });
+    } else {
+      return res.status(200).json({ message: "Student data updated successfully." });
+    }
+  } catch (err) {
+    console.log("Error updating student data:", err);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+
 
 router.post('/bookingstudents', (req,res) => {
   const data = req.body;
@@ -702,7 +859,82 @@ router.get("/getBookingStudents", async (req, res) => {
     return res.status(500).json({ message: "Internal server error." });
   }
 });
+router.delete("/deleteBookingStudent/:id", async (req, res) => {
+  try {
+    const stuId = req.params.id;  // Correctly extract the parameter
+    console.log("Received student ID for deletion:", stuId);  // Debug log
+    if (!stuId) {
+      return res.status(400).json({ message: "Student ID is required." });
+    }
+    const deleteQuery = `DELETE FROM student_booking WHERE id = ?`;
+    const [results] = await db.query(deleteQuery, [stuId]);
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Student data not found or no data deleted" });
+    } else {
+      return res.status(200).json({ message: "Student data deleted successfully." });
+    }
+  } catch (err) {
+    console.log("Error deleting student data :", err);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
 
+
+router.put('/updateBookingStudent/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      console.log(id);
+      const {
+          cls_id,
+          stu_name,
+          stu_aadhar,
+          gender,
+          dob,
+          doj,
+          community,
+          father_name,
+          father_mobile,
+          mother_name,
+          mother_mobile,
+          Bookingfees,
+          address,
+      } = req.body;
+
+      const updateQuery = `
+          UPDATE student_booking 
+          SET class = ?, student_name = ?, aadhar_no = ?, gender = ?, dob = ?, 
+              date_of_join = ?, community = ?, father_name = ?, father_mobile = ?, 
+              mother_name = ?, mother_mobile = ?, Bookingfees = ?, address = ? 
+          WHERE id = ?
+      `;
+
+      const [results] = await db.query(updateQuery, [
+          cls_id,
+          stu_name,
+          stu_aadhar,
+          gender,
+          dob,
+          doj,
+          community,
+          father_name,
+          father_mobile,
+          mother_name,
+          mother_mobile,
+          Bookingfees,
+          address,
+          id,
+      ]);
+
+      if (results.affectedRows === 0) {
+          res.status(404).json({ message: 'Student booking not found or no changes made.' });
+      } else {
+          res.status(200).json({ message: 'Student booking updated successfully.' });
+      }
+  } catch (err) {
+      console.error('Error updating student booking:', err);
+      res.status(500).json({ message: 'Internal server error.' });
+  }
+});
 
 router.post('/addstudents', (req, res) => {
   const data = req.body;
@@ -740,7 +972,7 @@ router.post('/addstudents', (req, res) => {
 
 router.get("/getAllStudents", async (req, res) => {
   try {
-    const getQuery = `SELECT * FROM students_data`;
+    const getQuery = `SELECT * FROM students_master`;
     const [results] = await db.query(getQuery);
     if (results.length === 0) {
       return res.status(404).json({ message: "Students data not found." });

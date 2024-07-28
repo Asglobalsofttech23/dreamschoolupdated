@@ -146,5 +146,6 @@ const admindomains = {
 //   ]
 // }
 const domains = sessionStorage.getItem("admin") ? admindomains :
+sessionStorage.getItem("super") ? admindomains :
 sessionStorage.getItem("employeeLoggedIn") ? teacherdomain :''
 export default domains;

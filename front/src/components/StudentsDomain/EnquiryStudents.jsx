@@ -478,6 +478,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StudentEnquiryApplication from './StudentEnquiryApplication';
 import StudentBookingApplication from './Booking';
+import UpdateEnquiryStudent from './EnquiryUpdate';
 
 
 const formatDate = (dateString) => {
@@ -562,7 +563,7 @@ function EnquiryStudents() {
   };
 
   const handleDlt = (id) => {
-    Axios.delete(`${config.apiURL}/students/deleteStudent/${id}`)
+    Axios.delete(`${config.apiURL}/students/deleteEnquiryStudent/${id}`)
       .then(() => {
         console.log("Deleted successfully");
         setDlt(prev => !prev);  // Toggle dlt to trigger useEffect
@@ -669,7 +670,7 @@ function EnquiryStudents() {
                   <Button variant="contained" color="primary" fullWidth startIcon={<AddIcon />} onClick={() => handleAddBooking(row)}>
                     Booking
                   </Button>
-                  <Button variant="contained" color='error' fullWidth startIcon={<DeleteIcon />} onClick={() => handleDlt(row.stu_id)}>
+                  <Button variant="contained" color='error' fullWidth startIcon={<DeleteIcon />} onClick={() => handleDlt(row.id)}>
                     Delete
                   </Button>
                   <Button variant="contained" color="warning" fullWidth startIcon={<EditIcon />} onClick={() => handleUpdate(row.stu_id)}>
@@ -707,7 +708,7 @@ function EnquiryStudents() {
 
       <Dialog open={openUpdate} onClose={() => setOpenUpdate(false)}>
         <DialogContent>
-          <UpdateStudent data={updateData} onClose={() => setOpenUpdate(false)} />
+          <UpdateEnquiryStudent data={updateData} onClose={() => setOpenUpdate(false)} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenUpdate(false)}>Close</Button>

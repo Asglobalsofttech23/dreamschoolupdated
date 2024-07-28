@@ -147,7 +147,9 @@ const handleRevenueClick = ()=>{
       </Grid>
 
 
+     
       <Grid item xs={12} sm={6} md={4} lg={3}>
+      <Link to='/newAdmission' style={{color:'white',textDecoration:"none"}} className='hover'>
   <div
     variant="contained"
     style={{
@@ -161,23 +163,24 @@ const handleRevenueClick = ()=>{
   >
     <span style={{ color: "white", display: "block", marginBottom: "10px", marginTop:"10px",  }}
     onClick={handleFeesClick} className='hover'>
-        <Link to='/addStudent' style={{color:'white',textDecoration:"none"}} className='hover'>
-       New Admission 
-        </Link>
+        
+       New Enquiry Admission 
+       
   
     </span>
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center",justifyContent: "center"  }}>
       <PiStudent style={{ height: "40px", width: "50px", color: "white" }} />
-      <h2 style={{ marginLeft: "auto", color: "white", height:"30px", width:"50px" }}>{studentsCount}</h2>
+      {/* <h2 style={{ marginLeft: "auto", color: "white", height:"30px", width:"50px" }}>{studentsCount}</h2> */}
     </div>
     <div>
-      <p style={{color:"white"}}>This Month</p>
-      <h6 style={{ marginLeft: "auto", color: "white", height:"100px", width:"10px" }}>0</h6>
+      {/* <p style={{color:"white"}}>This Month</p> */}
+      <h6 style={{ marginLeft: "auto", color: "white", height:"100px", width:"10px" }}></h6>
     </div>
-  </div>
+  </div></Link>
 </Grid>
    
 <Grid item xs={12} sm={6} md={4} lg={3}>
+<Link to='/StudentsBooking' style={{color:"white",textDecoration:"none"}}>
   <div
     variant="contained"
     style={{
@@ -191,8 +194,8 @@ const handleRevenueClick = ()=>{
   >
     <span style={{ color: "white", display: "block", marginBottom: "10px", marginTop:"10px"}} 
     onClick={handleTotalStudentClick} className='hover'>
-         <Link to='/allstudents' style={{color:"white",textDecoration:"none"}}>
-         Total Students   </Link>
+         
+         Booking Students   
   
     </span>
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -200,16 +203,17 @@ const handleRevenueClick = ()=>{
       <PiStudent style={{ height: "40px", width: "50px", color: "white" }} />
       {/* Display the count */}
       <h2 style={{ marginLeft: "10px", marginRight: "10px", color: "white", fontSize: "24px", textAlign: "center" }}>
-        {studentsCount}
+        {/* {studentsCount} */}
       </h2>
     </div>
-  </div>
+  </div></Link>
 </Grid>
 
 
 
 
 <Grid item xs={12} sm={6} md={4} lg={3}>
+<Link to='/allstudentlist' style={{color:"white",textDecoration:"none"}}>
   <div
     variant="contained"
     style={{
@@ -225,23 +229,23 @@ const handleRevenueClick = ()=>{
     onClick={handleTotalStaffClick}
     className='hover'
     >
-       <Link to='/allstaffs' style={{color:"white",textDecoration:"none"}}> Total staffs
-      </Link>
+        New  Admissions
+      
   
     </span>
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
       {/* Assuming IoPeopleSharp is an icon component */}
       <IoPeopleSharp style={{ height: "40px", width: "50px", color: "white" }} />
       {/* Display the count */}
-      <h2 style={{ marginLeft: "10px", marginRight: "10px", color: "white", fontSize: "24px", textAlign: "center" }}>{staffsCount}</h2>
+      <h2 style={{ marginLeft: "10px", marginRight: "10px", color: "white", fontSize: "24px", textAlign: "center" }}>{studentsCount}</h2>
     </div>
-  </div>
+  </div></Link>
 </Grid>
 
 
      
 
-     
+{/*      
 <Grid item xs={12} sm={6} md={4} lg={3}>
   <div
     variant="contained"
@@ -262,18 +266,18 @@ const handleRevenueClick = ()=>{
     </span>
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
       {/* Assuming RiMoneyRupeeCircleFill is an icon component */}
-      <RiMoneyRupeeCircleFill style={{ height: "40px", width: "50px", color: "white" }} />
-      {/* Display the total revenue amount  */}
+      {/* <RiMoneyRupeeCircleFill style={{ height: "40px", width: "50px", color: "white" }} /> */}
+      {/* Display the total revenue amount  
       <h2 style={{ marginLeft: "10px", marginRight: "10px", color: "white", fontSize: "24px", textAlign: "center" }}>
        {totalRevenue ? `${totalRevenue.total_paid_amount}` : "Loading..."} 
        </h2>
-      <h4 style={{ marginLeft: "10px", marginRight: "10px", color: "white", fontSize: "24px", textAlign: "center" }}>0</h4>
+      <h4 style={{ marginLeft: "10px", marginRight: "10px", color: "white", fontSize: "24px", textAlign: "center" }}></h4>
     </div>
   </div>
-</Grid>
+</Grid> */}
       {/* row 2 */}
       <Grid item xs={12} md={7} lg={8} >
-        <UniqueVisitorCard />
+        {/* <UniqueVisitorCard /> */}
       </Grid>
       
     

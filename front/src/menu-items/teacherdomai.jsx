@@ -142,6 +142,7 @@ import {
     ]
   }
   const teacherdomains = sessionStorage.getItem("admin") ? teachersdomain :
+  sessionStorage.getItem("super") ? teachersdomain :
   sessionStorage.getItem("employeeLoggedIn") ? teacherdomain :''
   export default teacherdomains;
   

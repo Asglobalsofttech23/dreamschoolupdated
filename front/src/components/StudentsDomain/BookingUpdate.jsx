@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Box, Button, MenuItem, TextField, CircularProgress } from '@mui/material';
+import { Grid, Box, Button, MenuItem, TextField ,CircularProgress} from '@mui/material';
+import axios from 'axios';
 import { useNavigate } from 'react-router';
 import config from '../../config';
+import { Done } from '@mui/icons-material';
 
 // Function to format date for display
 const formatDate = (dateString) => {
@@ -13,23 +15,22 @@ const formatDate = (dateString) => {
     return `${year}-${month}-${day}`; // Format for input type 'date'
 };
 
-function StudentAdmissionApplication({ data, onClose }) {
+function StudentBookingUpdate({ data, onClose }) {
     const navigate = useNavigate();
     const [clsData, setClsData] = useState([]);
-    const [studentinfo, setStudentinfo] = useState({
-        cls_id: data ? data.cls_id : '',
-        stu_name: data ? data.stu_name : '',
-        stu_aadhar: data ? data.stu_aadhar : '',
+    const [studentInfo, setStudentInfo] = useState({
+        cls_id: data ? data.class : '',
+        stu_name: data ? data.student_name : '',
+        stu_aadhar: data ? data.aadhar_no : '',
         gender: data ? data.gender : '',
-        dob: data ? formatDate(data.dob) : '',
-        doj: data ? formatDate(data.doj) : '',
+        dob: data ? formatDate(data.date_of_birth) : '',
+        doj: data ? formatDate(data.date_of_joining) : '',
         community: data ? data.community : '',
         father_name: data ? data.father_name : '',
         father_mobile: data ? data.father_mobile : '',
         mother_name: data ? data.mother_name : '',
         mother_mobile: data ? data.mother_mobile : '',
         Bookingfees: data ? data.Bookingfees : '',
-        totalfees: data ? data.totalfees : '',
         address: data ? data.address : '',
     });
     const [errors, setErrors] = useState({});
@@ -43,7 +44,6 @@ function StudentAdmissionApplication({ data, onClose }) {
         const validatePhoneNumber = (phone) => /^[6-9]\d{9}$/.test(phone);
         const validateAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
         const validateDate = (date) => /^\d{4}-\d{2}-\d{2}$/.test(date);
-        const validateNumber = (num) => /^\d+$/.test(num);
 
         // Validation for each field
         switch (name) {
@@ -104,18 +104,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                 if (!trimmedValue) errmsg = "Please enter Address";
                 break;
             case "Bookingfees":
-                if (!trimmedValue) {
-                    errmsg = "Please enter Booking Fees";
-                } else if (!validateNumber(trimmedValue)) {
-                    errmsg = "Booking Fees must be a valid number";
-                }
-                break;
-            case "totalfees":
-                if (!trimmedValue) {
-                    errmsg = "Please enter Total Fees";
-                } else if (!validateNumber(trimmedValue)) {
-                    errmsg = "Total Fees must be a valid number";
-                }
+                if (!trimmedValue) errmsg = "Please enter Booking Fees";
                 break;
             default:
                 break;
@@ -125,9 +114,10 @@ function StudentAdmissionApplication({ data, onClose }) {
     };
 
     useEffect(() => {
-        fetch(`${config.apiURL}/clsAndSec/getClass`)
-            .then((response) => response.json())
-            .then((data) => setClsData(data))
+        axios.get(`${config.apiURL}/clsAndSec/getClass`)
+            .then((res) => {
+                setClsData(res.data);
+            })
             .catch((err) => {
                 console.log("Error fetching Class data", err);
             });
@@ -138,18 +128,18 @@ function StudentAdmissionApplication({ data, onClose }) {
         const error = handleValidation(name, value);
 
         setErrors({ ...errors, [name]: error });
-        setStudentinfo({ ...studentinfo, [name]: value });
+        setStudentInfo({ ...studentInfo, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
         setSuccess(false);
 
         // Validate form data
         let formErrors = {};
-        Object.keys(studentinfo).forEach((name) => {
-            const value = studentinfo[name];
+        Object.keys(studentInfo).forEach((name) => {
+            const value = studentInfo[name];
             const error = handleValidation(name, value);
             if (error) {
                 formErrors[name] = error;
@@ -162,64 +152,49 @@ function StudentAdmissionApplication({ data, onClose }) {
             return;
         }
 
-        try {
-            const response = await fetch(`${config.apiURL}/students/addstudents`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(studentinfo)
+        // Submit form data
+        axios.put(`${config.apiURL}/students/updateBookingStudent/${data.id}`, studentInfo)
+            .then((res) => {
+                if (res.status === 200) {
+                    setSuccess(true);
+                    onClose();
+                    // Reset form fields
+                    setStudentInfo({
+                        cls_id: "",
+                        stu_name: "",
+                        stu_aadhar: "",
+                        gender: "",
+                        dob: "",
+                        doj: "",
+                        community: "",
+                        father_name: "",
+                        father_mobile: "",
+                        mother_name: "",
+                        mother_mobile: "",
+                        Bookingfees: "",
+                        address: ""
+                    });
+                    setErrors({});
+                } else {
+                    console.error("Unexpected response status:", res.status);
+                    setErrors({ general: "Update failed. Please try again." });
+                }
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Error:", err);
+                // Handle error response
+                const errorMsg = err.response?.data?.message || "An error occurred. Please try again.";
+                setErrors({ general: errorMsg });
+                setLoading(false);
             });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            if (response.status === 200) {
-                console.log("Success", data);
-                setSuccess(true);
-                alert("Success");
-                onClose();
-                // Reset form fields
-                setStudentinfo({
-                    cls_id: "",
-                    stu_name: "",
-                    stu_aadhar: "",
-                    gender: "",
-                    dob: "",
-                    doj: "",
-                    community: "",
-                    father_name: "",
-                    father_mobile: "",
-                    mother_name: "",
-                    mother_mobile: "",
-                    Bookingfees: "",
-                    totalfees: "",
-                    address: ""
-                });
-                setErrors({});
-                navigate('/allStudents');
-            } else {
-                console.error("Unexpected response status:", response.status);
-                setErrors({ general: "Submission failed. Please try again." });
-            }
-        } catch (err) {
-            console.error("Error:", err);
-            // Handle error response
-            const errorMsg = err.message || "An error occurred. Please try again.";
-            setErrors({ general: errorMsg });
-        } finally {
-            setLoading(false);
-        }
     };
 
     return (
         <div>
-            <h1>Student Admission Form</h1>
-            {loading }
-            {success && <div>Form submitted successfully!</div>}
+            <h1>Update Booking</h1>
+            {loading && <CircularProgress />}
+            {success && <div>Update submitted successfully!</div>}
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
@@ -229,7 +204,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             name="cls_id"
                             label="Class"
                             onChange={handleChange}
-                            value={studentinfo.cls_id}
+                            value={studentInfo.cls_id}
                             error={!!errors.cls_id}
                             helperText={errors.cls_id}
                         >
@@ -245,7 +220,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Student Name"
                             variant="outlined"
                             name="stu_name"
-                            value={studentinfo.stu_name}
+                            value={studentInfo.stu_name}
                             error={!!errors.stu_name}
                             helperText={errors.stu_name}
                         />
@@ -257,7 +232,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Aadhar Number"
                             type='number'
                             name="stu_aadhar"
-                            value={studentinfo.stu_aadhar}
+                            value={studentInfo.stu_aadhar}
                             variant="outlined"
                             error={!!errors.stu_aadhar}
                             helperText={errors.stu_aadhar}
@@ -271,7 +246,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             type='date'
                             name='dob'
                             onChange={handleChange}
-                            value={studentinfo.dob}
+                            value={studentInfo.dob}
                             error={!!errors.dob}
                             helperText={errors.dob}
                         />
@@ -284,7 +259,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             type='date'
                             name='doj'
                             onChange={handleChange}
-                            value={studentinfo.doj}
+                            value={studentInfo.doj}
                             error={!!errors.doj}
                             helperText={errors.doj}
                         />
@@ -296,7 +271,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             name="gender"
                             label="Gender"
                             onChange={handleChange}
-                            value={studentinfo.gender}
+                            value={studentInfo.gender}
                             error={!!errors.gender}
                             helperText={errors.gender}
                         >
@@ -304,7 +279,6 @@ function StudentAdmissionApplication({ data, onClose }) {
                             <MenuItem value="Female">Female</MenuItem>
                         </TextField>
                     </Grid>
-
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
@@ -312,7 +286,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Community"
                             variant="outlined"
                             name="community"
-                            value={studentinfo.community}
+                            value={studentInfo.community}
                             error={!!errors.community}
                             helperText={errors.community}
                         />
@@ -324,7 +298,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Father's Name"
                             variant="outlined"
                             name="father_name"
-                            value={studentinfo.father_name}
+                            value={studentInfo.father_name}
                             error={!!errors.father_name}
                             helperText={errors.father_name}
                         />
@@ -336,7 +310,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Father's Mobile"
                             type='number'
                             name="father_mobile"
-                            value={studentinfo.father_mobile}
+                            value={studentInfo.father_mobile}
                             error={!!errors.father_mobile}
                             helperText={errors.father_mobile}
                         />
@@ -348,7 +322,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Mother's Name"
                             variant="outlined"
                             name="mother_name"
-                            value={studentinfo.mother_name}
+                            value={studentInfo.mother_name}
                             error={!!errors.mother_name}
                             helperText={errors.mother_name}
                         />
@@ -360,7 +334,7 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Mother's Mobile"
                             type='number'
                             name="mother_mobile"
-                            value={studentinfo.mother_mobile}
+                            value={studentInfo.mother_mobile}
                             error={!!errors.mother_mobile}
                             helperText={errors.mother_mobile}
                         />
@@ -372,21 +346,9 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Booking Fees"
                             type='number'
                             name="Bookingfees"
-                            value={studentinfo.Bookingfees}
+                            value={studentInfo.Bookingfees}
                             error={!!errors.Bookingfees}
                             helperText={errors.Bookingfees}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            label="Total Fees"
-                            type='number'
-                            name="totalfees"
-                            value={studentinfo.totalfees}
-                            error={!!errors.totalfees}
-                            helperText={errors.totalfees}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -396,20 +358,15 @@ function StudentAdmissionApplication({ data, onClose }) {
                             label="Address"
                             variant="outlined"
                             name="address"
-                            value={studentinfo.address}
+                            value={studentInfo.address}
                             error={!!errors.address}
                             helperText={errors.address}
                         />
                     </Grid>
                 </Grid>
-                {errors.general && (
-                    <Box mt={2}>
-                        <div style={{ color: 'red' }}>{errors.general}</div>
-                    </Box>
-                )}
                 <Box mt={2}>
-                    <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                        Submit
+                    <Button type="submit" variant="contained" color="primary">
+                        Update
                     </Button>
                     <Button onClick={onClose} variant="outlined" color="secondary" style={{ marginLeft: 10 }}>
                         Cancel
@@ -420,4 +377,4 @@ function StudentAdmissionApplication({ data, onClose }) {
     );
 }
 
-export default StudentAdmissionApplication;
+export default StudentBookingUpdate;

@@ -1101,7 +1101,7 @@ function StudentEnquiryApplication({ onClose }) {
     return (
         <div>
             <h1>Student Enquiry Form</h1>
-            {loading && <CircularProgress />}
+            {loading }
             {success && <div>Form submitted successfully!</div>}
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>

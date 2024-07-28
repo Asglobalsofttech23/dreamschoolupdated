@@ -59,9 +59,18 @@ import {
         url: '/ecafees',
         icon: icons.CurrencyRupeeIcon
       },
+
+      {
+        id: 'SchemeFees Allocation',
+        title: 'Scheme-Fees',
+        type: 'item',
+        url: '/schemefees',
+        icon: icons.CurrencyRupeeIcon
+      },
       
     ]
   };
-  const FeesDomain = sessionStorage.getItem("admin") ? admindepartment:''
+  const FeesDomain = sessionStorage.getItem("admin") ? admindepartment:
+  sessionStorage.getItem("super") ? admindepartment:''
   export default FeesDomain;
   

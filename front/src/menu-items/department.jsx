@@ -71,4 +71,5 @@ const admindepartment = {
   ]
 };
 const department = sessionStorage.getItem("admin") ? admindepartment:''
+// sessionStorage.getItem("super") ? admindepartment :''
 export default department;

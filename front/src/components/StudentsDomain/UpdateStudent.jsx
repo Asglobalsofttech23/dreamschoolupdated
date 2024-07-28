@@ -1,134 +1,642 @@
+// import React, { useEffect, useState } from 'react';
+// import { Grid, MenuItem, Select, TextField, Button, Box } from '@mui/material';
+// import axios from 'axios';
+// import config from '../../config';
+// import { Done } from '@mui/icons-material';
+
+// function UpdateStudent({ data, onClose }) {
+//     const [staffData, setStaffData] = useState([]);
+//     const [clsData, setClsData] = useState([]);
+//     const [secData, setSecData] = useState([]);
+//     const [studentinfo, setStudentinfo] = useState({
+//         staff_id: data ? data.staff_id : '',
+//         cls_id: data ? data.cls_id : '',
+        
+//         stu_name: data ? data.stu_name : '',
+//         stu_aadhar: data ? data.stu_aadhar : '',
+//         gender: data ? data.gender : '',
+//         dob: data ? data.dob : '',
+//         van: data ? data.van : '',
+
+//         community: data ? data.community : '',
+//         cast_name: data ? data.cast_name : '',
+//         religion: data ? data.religion : '',
+//         father_name: data ? data.father_name : '',
+//         father_mobile: data ? data.father_mobile : '',
+//         father_occupation: data ? data.father_occupation : '',
+//         father_annual_income: data ? data.father_annual_income : '',
+//         mother_name: data ? data.mother_name : '',
+//         mother_mobile: data ? data.mother_mobile : '',
+//         mother_occupation: data ? data.mother_occupation : '',
+//         mother_annual_income: data ? data.mother_annual_income : '',
+//         address: data ? data.address : '',
+//         stu_img: null,
+//     });
+
+//     const [errors, setErrors] = useState({
+//         staff_id: '',
+//         cls_id: '',
+//         stu_name: '',
+//         stu_aadhar: '',
+//         gender: '',
+//         dob: '',
+//         van: '',
+//         community: '',
+//         cast_name: '',
+//         religion: '',
+//         father_name: '',
+//         father_mobile: '',
+//         father_occupation: '',
+//         father_annual_income: '',
+//         mother_name: '',
+//         mother_mobile: '',
+//         mother_occupation: '',
+//         mother_annual_income: '',
+//         address: '',
+//         stu_img: '',
+//     });
+
+//     const handleValidation = (name, value) => {
+//         const trimmedValue = value && typeof value === 'string' ? value.trim() : value;
+//         let errmsg = '';
+//         const validatePhoneNumber = (phone) => /^[6-9]\d{9}$/.test(phone);
+//         const validateAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
+//         const validateAnnualIncome = (income) => /^\d+(\.\d{1,2})?$/.test(income);
+//         const validateDate = (date) => {
+//             const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+//             return datePattern.test(date);
+//         };
+
+//         // Validation for each field
+//         switch (name) {
+//             case 'staff_id':
+//                 if (!trimmedValue) errmsg = 'Please select Staff Name';
+//                 break;
+//             case 'cls_id':
+//                 if (!trimmedValue) errmsg = 'Please select Class';
+//                 break;
+//             case 'van':
+//                 if (!trimmedValue) errmsg = 'Please select van';
+//                 break;
+//             case 'stu_name':
+//                 if (!trimmedValue) errmsg = 'Please enter Student Name';
+//                 break;
+//             // case 'stu_aadhar':
+//             //     if (!validateAadhar(trimmedValue)) errmsg = 'Please enter a valid 12-digit Aadhar number';
+//             //     break;
+//             case 'gender':
+//                 if (!trimmedValue) errmsg = 'Please select Gender';
+//                 break;
+//             case 'dob':
+//                 if (!validateDate(trimmedValue)) errmsg = 'Please enter a valid Date of Birth';
+//                 break;
+//             case 'community':
+//                 if (!trimmedValue) errmsg = 'Please enter Community';
+//                 break;
+//             case 'cast_name':
+//                 if (!trimmedValue) errmsg = 'Please enter Caste Name';
+//                 break;
+//             case 'religion':
+//                 if (!trimmedValue) errmsg = 'Please enter Religion';
+//                 break;
+//             case 'father_name':
+//                 if (!trimmedValue) errmsg = "Please enter Father's Name";
+//                 break;
+//             case 'father_mobile':
+//                 if (!validatePhoneNumber(trimmedValue)) errmsg = 'Please enter a valid mobile number';
+//                 break;
+//             case 'father_occupation':
+//                 if (!trimmedValue) errmsg = "Please enter Father's Occupation";
+//                 break;
+//             case 'father_annual_income':
+//                 if (!validateAnnualIncome(trimmedValue)) errmsg = 'Please enter a valid annual income';
+//                 break;
+//             case 'mother_name':
+//                 if (!trimmedValue) errmsg = "Please enter Mother's Name";
+//                 break;
+//             case 'mother_mobile':
+//                 if (!validatePhoneNumber(trimmedValue)) errmsg = 'Please enter a valid mobile number';
+//                 break;
+//             case 'mother_occupation':
+//                 if (!trimmedValue) errmsg = "Please enter Mother's Occupation";
+//                 break;
+//             case 'mother_annual_income':
+//                 if (!validateAnnualIncome(trimmedValue)) errmsg = 'Please enter a valid annual income';
+//                 break;
+//             case 'address':
+//                 if (!trimmedValue) errmsg = 'Please enter Address';
+//                 break;
+//             // case 'stu_img':
+//             //     if (!value) errmsg = 'Please upload Student Image';
+//             //     break;
+//             default:
+//                 break;
+//         }
+
+//         return errmsg;
+//     };
+
+//     useEffect(() => {
+//         axios
+//             .get(`${config.apiURL}/staffs/getStaffs`)
+//             .then((res) => {
+//                 setStaffData(res.data);
+//             })
+//             .catch((err) => {
+//                 console.log('Error fetching staff data:', err);
+//             });
+
+//         axios
+//             .get(`${config.apiURL}/clsAndSec/getClass`)
+//             .then((res) => {
+//                 setClsData(res.data);
+//             })
+//             .catch((err) => {
+//                 console.log('Error fetching Class data', err);
+//             });
+
+//         axios
+//             .get(`${config.apiURL}/clsAndSec/getSection`)
+//             .then((res) => {
+//                 setSecData(res.data);
+//             })
+//             .catch((err) => {
+//                 console.log('error in fetching section data :', err);
+//             });
+//     }, []);
+
+//     const handleChange = (e) => {
+//         const { name, value, files } = e.target;
+//         const newValue = files ? files[1] : value; // If it's a file input, get the file, otherwise get the value
+//         const error = handleValidation(name, value);
+//         setErrors({ ...errors, [name]: error });
+//         setStudentinfo({ ...studentinfo, [name]: newValue });
+//     };
+
+//     const handleSubmit = (e) => {
+//         e.preventDefault();
+//         const formerrors = {};
+//         Object.keys(studentinfo).forEach((name) => {
+//             const value = studentinfo[name];
+//             const error = handleValidation(name, value);
+//             if (error) {
+//                 formerrors[name] = error;
+//             }
+//         });
+
+//         if (Object.keys(formerrors).length > 0) {
+//             setErrors(formerrors);
+//         }
+
+//         const formData = new FormData();
+
+//         // Append all fields to the FormData object
+//         Object.entries(studentinfo).forEach(([key, value]) => {
+//             // Check if the value is a File object (for the image)
+//             if (value instanceof File) {
+//                 formData.append(key, value, value.name); // Append the file with its name
+//             } else {
+//                 formData.append(key, value); // Append other fields as they are
+//             }
+//         });
+
+//         axios
+//             .put(`${config.apiURL}/students/updateStudent/${data.stu_id}`, formData, {
+//                 headers: {
+//                     'Content-Type': 'multipart/form-data',
+//                 },
+//             })
+//             .then((res) => {
+//                 console.log('Success');
+//                 console.log('Data:', studentinfo);
+//                 onClose();
+//             })
+//             .catch((err) => {
+//                 console.log('Error:', err);
+//                 console.log('Data:', studentinfo);
+//             });
+//     };
+
+//     return (
+//         <div>
+//             <h1>Update form</h1>
+//             <form onSubmit={handleSubmit}>
+//                 <Grid container spacing={3}>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             select
+//                             name="staff_id"
+//                             label="Select Staff"
+//                             onChange={handleChange}
+//                             error={!!errors.staff_id}
+//                             helperText={errors.staff_id}
+//                             value={studentinfo.staff_id}
+//                         >
+//                             {staffData.map((staff) => (
+//                                 <MenuItem key={staff.staff_id} value={staff.staff_id}>
+//                                     {staff.staff_name}
+//                                 </MenuItem>
+//                             ))}
+//                         </TextField>
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             select
+//                             name="cls_id"
+//                             label="Class"
+//                             onChange={handleChange}
+//                             value={studentinfo.cls_id}
+//                             error={!!errors.cls_id}
+//                             helperText={errors.cls_id}
+//                         >
+//                             {clsData.map((cls) => (
+//                                 <MenuItem key={cls.cls_id} value={cls.cls_id}>
+//                                     {cls.cls_name}
+//                                 </MenuItem>
+//                             ))}
+//                         </TextField>
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                     <TextField
+//                         fullWidth
+//                         select
+//                            name="scheme"
+//                            label="Scheme"
+//                            onChange={handleChange}
+//                            value={studentinfo.scheme}
+//                            error={!!errors.cls_id}
+//                            helperText={errors.cls_id}
+//                            >
+//                             <MenuItem value={1}>yes</MenuItem>
+//                             <MenuItem value={0}>no</MenuItem>
+//                     </TextField>
+                      
+                            
+                        
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Student name"
+//                             variant="outlined"
+//                             name="stu_name"
+//                             value={studentinfo.stu_name}
+//                             error={!!errors.stu_name}
+//                             helperText={errors.stu_name}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Aadhar number"
+//                             type="number"
+//                             name="stu_aadhar"
+//                             value={studentinfo.stu_aadhar}
+//                             variant="outlined"
+//                             error={!!errors.stu_aadhar}
+//                             helperText={errors.stu_aadhar}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             label="Date of Birth"
+//                             InputLabelProps={{ shrink: true }}
+//                             type="date"
+//                             name="dob"
+//                             onChange={handleChange}
+//                             value={studentinfo.dob}
+//                             variant="outlined"
+//                             error={!!errors.dob}
+//                             helperText={errors.dob}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <Select
+//                             labelId="gender-select-label"
+//                             id="gender-select"
+//                             value={studentinfo.van}
+//                             onChange={handleChange}
+//                             name="van"
+//                             label="Transport from school"
+//                             fullWidth
+//                             error={!!errors.van}
+//                             helperText={errors.van}
+//                         >
+//                             <MenuItem value={1}>yes</MenuItem>
+//                             <MenuItem value={0}>no</MenuItem>
+                            
+//                         </Select>
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <Select
+//                             labelId="gender-select-label"
+//                             id="gender-select"
+//                             value={studentinfo.gender}
+//                             onChange={handleChange}
+//                             name="gender"
+//                             label="Gender"
+//                             fullWidth
+//                             error={!!errors.gender}
+//                             helperText={errors.gender}
+//                         >
+//                             <MenuItem value="male">Male</MenuItem>
+//                             <MenuItem value="female">Female</MenuItem>
+//                             <MenuItem value="others">Others</MenuItem>
+//                         </Select>
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="cast_name"
+//                             name="cast_name"
+//                             value={studentinfo.cast_name}
+//                             variant="outlined"
+//                             error={!!errors.cast_name}
+//                             helperText={errors.cast_name}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Religion"
+//                             name="religion"
+//                             value={studentinfo.religion}
+//                             variant="outlined"
+//                             error={!!errors.religion}
+//                             helperText={errors.religion}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Community"
+//                             name="community"
+//                             value={studentinfo.community}
+//                             variant="outlined"
+//                             error={!!errors.community}
+//                             helperText={errors.community}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <Box sx={{ width: '100%', maxWidth: '100%' }}>
+//                             <TextField
+//                                 fullWidth
+//                                 label="Address"
+//                                 name="address"
+//                                 onChange={handleChange}
+//                                 id="fullWidth"
+//                                 value={studentinfo.address}
+//                                 variant="outlined"
+//                                 error={!!errors.address}
+//                                 helperText={errors.address}
+//                             />
+//                         </Box>
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Father name"
+//                             name="father_name"
+//                             value={studentinfo.father_name}
+//                             variant="outlined"
+//                             error={!!errors.father_name}
+//                             helperText={errors.father_name}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Father Mobile"
+//                             name="father_mobile"
+//                             value={studentinfo.father_mobile}
+//                             variant="outlined"
+//                             error={!!errors.father_mobile}
+//                             helperText={errors.father_mobile}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Father Occupation"
+//                             name="father_occupation"
+//                             value={studentinfo.father_occupation}
+//                             variant="outlined"
+//                             error={!!errors.father_occupation}
+//                             helperText={errors.father_occupation}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Father Annual Income"
+//                             name="father_annual_income"
+//                             value={studentinfo.father_annual_income}
+//                             variant="outlined"
+//                             error={!!errors.father_annual_income}
+//                             helperText={errors.father_annual_income}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Mother name"
+//                             name="mother_name"
+//                             value={studentinfo.mother_name}
+//                             variant="outlined"
+//                             error={!!errors.mother_name}
+//                             helperText={errors.mother_name}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Mother Mobile"
+//                             name="mother_mobile"
+//                             value={studentinfo.mother_mobile}
+//                             variant="outlined"
+//                             error={!!errors.mother_mobile}
+//                             helperText={errors.mother_mobile}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Mother Occupation"
+//                             name="mother_occupation"
+//                             value={studentinfo.mother_occupation}
+//                             variant="outlined"
+//                             error={!!errors.mother_occupation}
+//                             helperText={errors.mother_occupation}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             label="Mother Annual Income"
+//                             name="mother_annual_income"
+//                             value={studentinfo.mother_annual_income}
+//                             variant="outlined"
+//                             error={!!errors.mother_annual_income}
+//                             helperText={errors.mother_annual_income}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <TextField
+//                             fullWidth
+//                             onChange={handleChange}
+//                             InputLabelProps={{ shrink: true }}
+//                             type="file"
+//                             label="Student image"
+//                             name="stu_img"
+//                             accept="image/*"
+//                             variant="outlined"
+//                             error={!!errors.stu_img}
+//                             helperText={errors.stu_img}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={12} sm={6}>
+//                         <Button type="submit" variant="contained" startIcon={<Done/>} color="success">
+//                             Submit
+//                         </Button>
+//                     </Grid>
+//                 </Grid>
+//             </form>
+//         </div>
+//     );
+// }
+
+// export default UpdateStudent;
+
+
 import React, { useEffect, useState } from 'react';
-import { Grid, MenuItem, Select, TextField, Button, Box } from '@mui/material';
+import { Grid, Box, Button, MenuItem, TextField, CircularProgress, Dialog } from '@mui/material';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 import config from '../../config';
 import { Done } from '@mui/icons-material';
 
-function UpdateStudent({ data, onClose }) {
-    const [staffData, setStaffData] = useState([]);
-    const [clsData, setClsData] = useState([]);
-    const [secData, setSecData] = useState([]);
-    const [studentinfo, setStudentinfo] = useState({
-        staff_id: data ? data.staff_id : '',
-        cls_id: data ? data.cls_id : '',
-        
-        stu_name: data ? data.stu_name : '',
-        stu_aadhar: data ? data.stu_aadhar : '',
-        gender: data ? data.gender : '',
-        dob: data ? data.dob : '',
-        van: data ? data.van : '',
+// Function to format date for display
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`; // Format for input type 'date'
+};
 
+function UpdateStudents({ data, onClose }) {
+    const navigate = useNavigate();
+    const [clsData, setClsData] = useState([]);
+    const [studentInfo, setStudentInfo] = useState({
+        stu_id: data ? data.stu_id : '',
+        stu_name: data ? data.stu_name : '',
+        aadhar_no: data ? data.aadhar_no : '',
+        gender: data ? data.gender : '',
+        dob: data ? formatDate(data.dob) : '',
+        date_of_join: data ? formatDate(data.date_of_join) : '',
+        cls_id: data ? data.cls_id : '',
         community: data ? data.community : '',
-        cast_name: data ? data.cast_name : '',
-        religion: data ? data.religion : '',
         father_name: data ? data.father_name : '',
         father_mobile: data ? data.father_mobile : '',
-        father_occupation: data ? data.father_occupation : '',
-        father_annual_income: data ? data.father_annual_income : '',
         mother_name: data ? data.mother_name : '',
         mother_mobile: data ? data.mother_mobile : '',
-        mother_occupation: data ? data.mother_occupation : '',
-        mother_annual_income: data ? data.mother_annual_income : '',
+        bookingfees: data ? data.bookingfees : '',
         address: data ? data.address : '',
-        stu_img: null,
+        Totalfees: data ? data.Totalfees : ''
     });
-
-    const [errors, setErrors] = useState({
-        staff_id: '',
-        cls_id: '',
-        stu_name: '',
-        stu_aadhar: '',
-        gender: '',
-        dob: '',
-        van: '',
-        community: '',
-        cast_name: '',
-        religion: '',
-        father_name: '',
-        father_mobile: '',
-        father_occupation: '',
-        father_annual_income: '',
-        mother_name: '',
-        mother_mobile: '',
-        mother_occupation: '',
-        mother_annual_income: '',
-        address: '',
-        stu_img: '',
-    });
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const handleValidation = (name, value) => {
-        const trimmedValue = value && typeof value === 'string' ? value.trim() : value;
-        let errmsg = '';
+        let errmsg = "";
+        const trimmedValue = value && typeof value === "string" ? value.trim() : value;
+
         const validatePhoneNumber = (phone) => /^[6-9]\d{9}$/.test(phone);
         const validateAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
-        const validateAnnualIncome = (income) => /^\d+(\.\d{1,2})?$/.test(income);
-        const validateDate = (date) => {
-            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-            return datePattern.test(date);
-        };
+        const validateDate = (date) => /^\d{4}-\d{2}-\d{2}$/.test(date);
 
         // Validation for each field
         switch (name) {
-            case 'staff_id':
-                if (!trimmedValue) errmsg = 'Please select Staff Name';
+            case "cls_id":
+                if (!trimmedValue) errmsg = "Please select Class";
                 break;
-            case 'cls_id':
-                if (!trimmedValue) errmsg = 'Please select Class';
+            case "stu_name":
+                if (!trimmedValue) {
+                    errmsg = "Please enter Student Name";
+                } else if (!/^[a-zA-Z\s]+$/.test(trimmedValue)) {
+                    errmsg = "Student Name must contain only letters and spaces";
+                }
                 break;
-            case 'van':
-                if (!trimmedValue) errmsg = 'Please select van';
+            case "aadhar_no":
+                if (trimmedValue && !validateAadhar(trimmedValue)) errmsg = "Please enter a valid 12-digit Aadhar number";
                 break;
-            case 'stu_name':
-                if (!trimmedValue) errmsg = 'Please enter Student Name';
+            case "gender":
+                if (!trimmedValue) errmsg = "Please select Gender";
                 break;
-            // case 'stu_aadhar':
-            //     if (!validateAadhar(trimmedValue)) errmsg = 'Please enter a valid 12-digit Aadhar number';
-            //     break;
-            case 'gender':
-                if (!trimmedValue) errmsg = 'Please select Gender';
+            case "dob":
+                if (!validateDate(trimmedValue)) errmsg = "Please enter a valid Date of Birth";
                 break;
-            case 'dob':
-                if (!validateDate(trimmedValue)) errmsg = 'Please enter a valid Date of Birth';
+            case "date_of_join":
+                if (!validateDate(trimmedValue)) errmsg = "Please enter a valid Date of Joining";
                 break;
-            case 'community':
-                if (!trimmedValue) errmsg = 'Please enter Community';
+            case "community":
+                if (!trimmedValue) errmsg = "Please enter Community";
                 break;
-            case 'cast_name':
-                if (!trimmedValue) errmsg = 'Please enter Caste Name';
+            case "father_name":
+                if (!trimmedValue) {
+                    errmsg = "Please enter Father Name";
+                } else if (!/^[a-zA-Z\s]+$/.test(trimmedValue)) {
+                    errmsg = "Father Name must contain only letters and spaces";
+                }
                 break;
-            case 'religion':
-                if (!trimmedValue) errmsg = 'Please enter Religion';
+            case "father_mobile":
+                if (!validatePhoneNumber(trimmedValue)) {
+                    errmsg = "Please enter a valid mobile number";
+                } else if (!/^\d{10}$/.test(trimmedValue)) {
+                    errmsg = "Mobile number must be 10 digits";
+                }
                 break;
-            case 'father_name':
-                if (!trimmedValue) errmsg = "Please enter Father's Name";
+            case "mother_name":
+                if (!trimmedValue) {
+                    errmsg = "Please enter Mother Name";
+                } else if (!/^[a-zA-Z\s]+$/.test(trimmedValue)) {
+                    errmsg = "Mother Name must contain only letters and spaces";
+                }
                 break;
-            case 'father_mobile':
-                if (!validatePhoneNumber(trimmedValue)) errmsg = 'Please enter a valid mobile number';
+            case "mother_mobile":
+                if (!validatePhoneNumber(trimmedValue)) {
+                    errmsg = "Please enter a valid mobile number";
+                } else if (!/^\d{10}$/.test(trimmedValue)) {
+                    errmsg = "Mobile number must be 10 digits";
+                }
                 break;
-            case 'father_occupation':
-                if (!trimmedValue) errmsg = "Please enter Father's Occupation";
+            case "address":
+                if (!trimmedValue) errmsg = "Please enter Address";
                 break;
-            case 'father_annual_income':
-                if (!validateAnnualIncome(trimmedValue)) errmsg = 'Please enter a valid annual income';
+            case "bookingfees":
+                if (!trimmedValue) errmsg = "Please enter Booking Fees";
                 break;
-            case 'mother_name':
-                if (!trimmedValue) errmsg = "Please enter Mother's Name";
+            case "Totalfees":
+                if (!trimmedValue) errmsg = "Please enter Total Fees";
                 break;
-            case 'mother_mobile':
-                if (!validatePhoneNumber(trimmedValue)) errmsg = 'Please enter a valid mobile number';
-                break;
-            case 'mother_occupation':
-                if (!trimmedValue) errmsg = "Please enter Mother's Occupation";
-                break;
-            case 'mother_annual_income':
-                if (!validateAnnualIncome(trimmedValue)) errmsg = 'Please enter a valid annual income';
-                break;
-            case 'address':
-                if (!trimmedValue) errmsg = 'Please enter Address';
-                break;
-            // case 'stu_img':
-            //     if (!value) errmsg = 'Please upload Student Image';
-            //     break;
             default:
                 break;
         }
@@ -137,109 +645,93 @@ function UpdateStudent({ data, onClose }) {
     };
 
     useEffect(() => {
-        axios
-            .get(`${config.apiURL}/staffs/getStaffs`)
-            .then((res) => {
-                setStaffData(res.data);
-            })
-            .catch((err) => {
-                console.log('Error fetching staff data:', err);
-            });
-
-        axios
-            .get(`${config.apiURL}/clsAndSec/getClass`)
+        axios.get(`${config.apiURL}/clsAndSec/getClass`)
             .then((res) => {
                 setClsData(res.data);
             })
             .catch((err) => {
-                console.log('Error fetching Class data', err);
-            });
-
-        axios
-            .get(`${config.apiURL}/clsAndSec/getSection`)
-            .then((res) => {
-                setSecData(res.data);
-            })
-            .catch((err) => {
-                console.log('error in fetching section data :', err);
+                console.log("Error fetching Class data", err);
             });
     }, []);
 
     const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        const newValue = files ? files[1] : value; // If it's a file input, get the file, otherwise get the value
+        const { name, value } = e.target;
         const error = handleValidation(name, value);
+
         setErrors({ ...errors, [name]: error });
-        setStudentinfo({ ...studentinfo, [name]: newValue });
+        setStudentInfo({ ...studentInfo, [name]: value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formerrors = {};
-        Object.keys(studentinfo).forEach((name) => {
-            const value = studentinfo[name];
+        setLoading(true);
+        setSuccess(false);
+
+        // Validate form data
+        let formErrors = {};
+        Object.keys(studentInfo).forEach((name) => {
+            const value = studentInfo[name];
             const error = handleValidation(name, value);
             if (error) {
-                formerrors[name] = error;
+                formErrors[name] = error;
             }
         });
 
-        if (Object.keys(formerrors).length > 0) {
-            setErrors(formerrors);
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors);
+            setLoading(false);
+            return;
         }
 
-        const formData = new FormData();
-
-        // Append all fields to the FormData object
-        Object.entries(studentinfo).forEach(([key, value]) => {
-            // Check if the value is a File object (for the image)
-            if (value instanceof File) {
-                formData.append(key, value, value.name); // Append the file with its name
-            } else {
-                formData.append(key, value); // Append other fields as they are
-            }
-        });
-
-        axios
-            .put(`${config.apiURL}/students/updateStudent/${data.stu_id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
+        // Submit form data
+        axios.put(`${config.apiURL}/students/updateStudent/${data.stu_id}`, studentInfo)
             .then((res) => {
-                console.log('Success');
-                console.log('Data:', studentinfo);
-                onClose();
+                if (res.status === 200) {
+                    setSuccess(true);
+                    alert("Update successful");
+                    onClose();
+                    // Reset form fields
+                    setStudentInfo({
+                        stu_id: "",
+                        stu_name: "",
+                        aadhar_no: "",
+                        gender: "",
+                        dob: "",
+                        date_of_join: "",
+                        cls_id: "",
+                        community: "",
+                        father_name: "",
+                        father_mobile: "",
+                        mother_name: "",
+                        mother_mobile: "",
+                        bookingfees: "",
+                        address: "",
+                        Totalfees: ""
+                    });
+                    setErrors({});
+                    // navigate('/allStudents');
+                } else {
+                    console.error("Unexpected response status:", res.status);
+                    setErrors({ general: "Update failed. Please try again." });
+                }
+                setLoading(false);
             })
             .catch((err) => {
-                console.log('Error:', err);
-                console.log('Data:', studentinfo);
+                console.error("Error:", err);
+                // Handle error response
+                const errorMsg = err.response?.data?.message || "An error occurred. Please try again.";
+                setErrors({ general: errorMsg });
+                setLoading(false);
             });
     };
 
     return (
         <div>
-            <h1>Update Admission form</h1>
+            <h1>Update Student</h1>
+            {loading && <CircularProgress />}
+            {success && <div>Update submitted successfully!</div>}
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            select
-                            name="staff_id"
-                            label="Select Staff"
-                            onChange={handleChange}
-                            error={!!errors.staff_id}
-                            helperText={errors.staff_id}
-                            value={studentinfo.staff_id}
-                        >
-                            {staffData.map((staff) => (
-                                <MenuItem key={staff.staff_id} value={staff.staff_id}>
-                                    {staff.staff_name}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
@@ -247,38 +739,23 @@ function UpdateStudent({ data, onClose }) {
                             name="cls_id"
                             label="Class"
                             onChange={handleChange}
-                            value={studentinfo.cls_id}
+                            value={studentInfo.cls_id}
                             error={!!errors.cls_id}
                             helperText={errors.cls_id}
                         >
                             {clsData.map((cls) => (
-                                <MenuItem key={cls.cls_id} value={cls.cls_id}>
-                                    {cls.cls_name}
-                                </MenuItem>
+                                <MenuItem key={cls.cls_id} value={cls.cls_id}>{cls.cls_name}</MenuItem>
                             ))}
                         </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <select>
-                            fullWidth
-                           
-                            name="scheme"
-                            label="Scheme"
-                            onChange={handleChange}
-                            value={studentinfo.scheme}
-                             <MenuItem value={1}>yes</MenuItem>
-                             <MenuItem value={0}>no</MenuItem>
-                            
-                        </select>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Student name"
+                            label="Student Name"
                             variant="outlined"
                             name="stu_name"
-                            value={studentinfo.stu_name}
+                            value={studentInfo.stu_name}
                             error={!!errors.stu_name}
                             helperText={errors.stu_name}
                         />
@@ -287,13 +764,13 @@ function UpdateStudent({ data, onClose }) {
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Aadhar number"
-                            type="number"
-                            name="stu_aadhar"
-                            value={studentinfo.stu_aadhar}
+                            label="Aadhar Number"
+                            type='number'
+                            name="aadhar_no"
+                            value={studentInfo.aadhar_no}
                             variant="outlined"
-                            error={!!errors.stu_aadhar}
-                            helperText={errors.stu_aadhar}
+                            error={!!errors.aadhar_no}
+                            helperText={errors.aadhar_no}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -301,108 +778,62 @@ function UpdateStudent({ data, onClose }) {
                             fullWidth
                             label="Date of Birth"
                             InputLabelProps={{ shrink: true }}
-                            type="date"
-                            name="dob"
+                            type='date'
+                            name='dob'
                             onChange={handleChange}
-                            value={studentinfo.dob}
-                            variant="outlined"
+                            value={studentInfo.dob}
                             error={!!errors.dob}
                             helperText={errors.dob}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <Select
-                            labelId="gender-select-label"
-                            id="gender-select"
-                            value={studentinfo.van}
-                            onChange={handleChange}
-                            name="van"
-                            label="Transport from school"
+                        <TextField
                             fullWidth
-                            error={!!errors.van}
-                            helperText={errors.van}
-                        >
-                            <MenuItem value={1}>yes</MenuItem>
-                            <MenuItem value={0}>no</MenuItem>
-                            
-                        </Select>
+                            label="Date of Joining"
+                            InputLabelProps={{ shrink: true }}
+                            type='date'
+                            name='date_of_join'
+                            onChange={handleChange}
+                            value={studentInfo.date_of_join}
+                            error={!!errors.date_of_join}
+                            helperText={errors.date_of_join}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <Select
-                            labelId="gender-select-label"
-                            id="gender-select"
-                            value={studentinfo.gender}
-                            onChange={handleChange}
+                        <TextField
+                            fullWidth
+                            select
                             name="gender"
                             label="Gender"
-                            fullWidth
+                            onChange={handleChange}
+                            value={studentInfo.gender}
                             error={!!errors.gender}
                             helperText={errors.gender}
                         >
-                            <MenuItem value="male">Male</MenuItem>
-                            <MenuItem value="female">Female</MenuItem>
-                            <MenuItem value="others">Others</MenuItem>
-                        </Select>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            label="cast_name"
-                            name="cast_name"
-                            value={studentinfo.cast_name}
-                            variant="outlined"
-                            error={!!errors.cast_name}
-                            helperText={errors.cast_name}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            label="Religion"
-                            name="religion"
-                            value={studentinfo.religion}
-                            variant="outlined"
-                            error={!!errors.religion}
-                            helperText={errors.religion}
-                        />
+                            <MenuItem value="Male">Male</MenuItem>
+                            <MenuItem value="Female">Female</MenuItem>
+                        </TextField>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             onChange={handleChange}
                             label="Community"
-                            name="community"
-                            value={studentinfo.community}
                             variant="outlined"
+                            name="community"
+                            value={studentInfo.community}
                             error={!!errors.community}
                             helperText={errors.community}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <Box sx={{ width: '100%', maxWidth: '100%' }}>
-                            <TextField
-                                fullWidth
-                                label="Address"
-                                name="address"
-                                onChange={handleChange}
-                                id="fullWidth"
-                                value={studentinfo.address}
-                                variant="outlined"
-                                error={!!errors.address}
-                                helperText={errors.address}
-                            />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Father name"
-                            name="father_name"
-                            value={studentinfo.father_name}
+                            label="Father's Name"
                             variant="outlined"
+                            name="father_name"
+                            value={studentInfo.father_name}
                             error={!!errors.father_name}
                             helperText={errors.father_name}
                         />
@@ -411,10 +842,10 @@ function UpdateStudent({ data, onClose }) {
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Father Mobile"
+                            label="Father's Mobile"
+                            type='number'
                             name="father_mobile"
-                            value={studentinfo.father_mobile}
-                            variant="outlined"
+                            value={studentInfo.father_mobile}
                             error={!!errors.father_mobile}
                             helperText={errors.father_mobile}
                         />
@@ -423,34 +854,10 @@ function UpdateStudent({ data, onClose }) {
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Father Occupation"
-                            name="father_occupation"
-                            value={studentinfo.father_occupation}
+                            label="Mother's Name"
                             variant="outlined"
-                            error={!!errors.father_occupation}
-                            helperText={errors.father_occupation}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            label="Father Annual Income"
-                            name="father_annual_income"
-                            value={studentinfo.father_annual_income}
-                            variant="outlined"
-                            error={!!errors.father_annual_income}
-                            helperText={errors.father_annual_income}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            label="Mother name"
                             name="mother_name"
-                            value={studentinfo.mother_name}
-                            variant="outlined"
+                            value={studentInfo.mother_name}
                             error={!!errors.mother_name}
                             helperText={errors.mother_name}
                         />
@@ -459,10 +866,10 @@ function UpdateStudent({ data, onClose }) {
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Mother Mobile"
+                            label="Mother's Mobile"
+                            type='number'
                             name="mother_mobile"
-                            value={studentinfo.mother_mobile}
-                            variant="outlined"
+                            value={studentInfo.mother_mobile}
                             error={!!errors.mother_mobile}
                             helperText={errors.mother_mobile}
                         />
@@ -471,49 +878,50 @@ function UpdateStudent({ data, onClose }) {
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Mother Occupation"
-                            name="mother_occupation"
-                            value={studentinfo.mother_occupation}
-                            variant="outlined"
-                            error={!!errors.mother_occupation}
-                            helperText={errors.mother_occupation}
+                            label="Booking Fees"
+                            type='number'
+                            name="bookingfees"
+                            value={studentInfo.bookingfees}
+                            error={!!errors.bookingfees}
+                            helperText={errors.bookingfees}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            label="Mother Annual Income"
-                            name="mother_annual_income"
-                            value={studentinfo.mother_annual_income}
-                            variant="outlined"
-                            error={!!errors.mother_annual_income}
-                            helperText={errors.mother_annual_income}
+                            label="Total Fees"
+                            type='number'
+                            name="Totalfees"
+                            value={studentInfo.Totalfees}
+                            error={!!errors.Totalfees}
+                            helperText={errors.Totalfees}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12}>
                         <TextField
                             fullWidth
                             onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                            type="file"
-                            label="Student image"
-                            name="stu_img"
-                            accept="image/*"
+                            label="Address"
                             variant="outlined"
-                            error={!!errors.stu_img}
-                            helperText={errors.stu_img}
+                            name="address"
+                            value={studentInfo.address}
+                            error={!!errors.address}
+                            helperText={errors.address}
                         />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Button type="submit" variant="contained" startIcon={<Done/>} color="success">
-                            Submit
-                        </Button>
                     </Grid>
                 </Grid>
+                <Box mt={2}>
+                    <Button type="submit" variant="contained" color="primary">
+                        Update
+                    </Button>
+                    <Button onClick={onClose} variant="outlined" color="secondary" style={{ marginLeft: 10 }}>
+                        Cancel
+                    </Button>
+                </Box>
             </form>
         </div>
     );
 }
 
-export default UpdateStudent;
+export default UpdateStudents;

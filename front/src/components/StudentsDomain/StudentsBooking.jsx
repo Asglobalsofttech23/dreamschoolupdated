@@ -479,6 +479,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import StudentEnquiryApplication from './StudentEnquiryApplication';
 import StudentBookingApplication from './Booking';
 import StudentAdmissionApplication from './StudentAdmisson';
+import StudentBookingUpdate from './BookingUpdate';
 
 
 const formatDate = (dateString) => {
@@ -547,7 +548,7 @@ function AllBookingStudents() {
   }));
 
   const handleUpdate = (id) => {
-    const selectData = roleData.find((stu) => stu.stu_id === id);
+    const selectData = roleData.find((stu) => stu.id === id);
     if (selectData) {
       setUpdateData(selectData);
       setOpenUpdate(true);
@@ -564,7 +565,7 @@ function AllBookingStudents() {
   };
 
   const handleDlt = (id) => {
-    Axios.delete(`${config.apiURL}/students/deleteStudent/${id}`)
+    Axios.delete(`${config.apiURL}/students/deleteBookingStudent/${id}`)
       .then(() => {
         console.log("Deleted successfully");
         setDlt(prev => !prev);  // Toggle dlt to trigger useEffect
@@ -675,10 +676,10 @@ function AllBookingStudents() {
                   <Button variant="contained" color="primary" fullWidth startIcon={<AddIcon />} onClick={() => handleAdmisson(row)}>
                     Admission
                   </Button>
-                  <Button variant="contained" color='error' fullWidth startIcon={<DeleteIcon />} onClick={() => handleDlt(row.stu_id)}>
+                  <Button variant="contained" color='error' fullWidth startIcon={<DeleteIcon />} onClick={() => handleDlt(row.id)}>
                     Delete
                   </Button>
-                  <Button variant="contained" color="warning" fullWidth startIcon={<EditIcon />} onClick={() => handleUpdate(row.stu_id)}>
+                  <Button variant="contained" color="warning" fullWidth startIcon={<EditIcon />} onClick={() => handleUpdate(row.id)}>
                     Edit
                   </Button>
                 </StyledTableCell>
@@ -713,7 +714,7 @@ function AllBookingStudents() {
 
       <Dialog open={openUpdate} onClose={() => setOpenUpdate(false)}>
         <DialogContent>
-          <UpdateStudent data={updateData} onClose={() => setOpenUpdate(false)} />
+          <StudentBookingUpdate data={updateData} onClose={() => setOpenUpdate(false)} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenUpdate(false)}>Close</Button>

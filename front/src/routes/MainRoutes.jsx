@@ -41,6 +41,7 @@ import EnquiryStudents from 'components/StudentsDomain/EnquiryStudents';
 import VanStudent from 'components/Feesmanagement/VanFees';
 import EcaStudent from 'components/Feesmanagement/EcaFees';
 import ViewStudents from 'components/ClassesDomain/ViewStudents';
+import SchemeStudent from 'components/Feesmanagement/SchemeFees';
 
 // import Mystudents from 'components/EmployeField/Mystudents';
 
@@ -396,7 +397,10 @@ const adminRoutes = {
       path: 'ecafees',
       element: <EcaStudent/>,
     },
-
+    {
+      path: 'schemefees',
+      element: <SchemeStudent/>,
+    },
     {
       path: 'dashboard',
       children: [

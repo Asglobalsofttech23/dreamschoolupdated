@@ -3,7 +3,6 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import axios from 'axios';
 import config from '../../config'; // Ensure you have the correct path to your config file
 
-
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -12,7 +11,7 @@ const formatDate = (dateString) => {
     return `${day}/${month}/${year}`;
   };
 
-const EcaStudent = () => {
+const SchemeStudent = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [clsData, setClsData] = useState([]);
@@ -36,7 +35,7 @@ const EcaStudent = () => {
   const fetchVanStudents = async () => {
     setLoading(true); // Set loading to true when fetching data
     try {
-      const response = await axios.get(`${config.apiURL}/ecastudents`);
+      const response = await axios.get(`${config.apiURL}/schemestudents`);
       setStudents(response.data);
     } catch (err) {
       console.log("Error fetching van students:", err);
@@ -76,7 +75,6 @@ const EcaStudent = () => {
     return classData ? classData.cls_name : 'N/A';
   };
 
-
   return (
     <div>
       <Button variant="contained" color="primary" onClick={handleAddStudent}>
@@ -111,8 +109,8 @@ const EcaStudent = () => {
                 <TableCell>Name</TableCell>
                 {/* <TableCell>Aadhar</TableCell> */}
                 <TableCell>Gender</TableCell>
-                <TableCell>class</TableCell>
-                <TableCell>ECA</TableCell>
+                <TableCell>Class</TableCell>
+                <TableCell>Scheme Fees</TableCell>
                 {/* Add more columns as needed */}
               </TableRow>
             </TableHead>
@@ -124,7 +122,7 @@ const EcaStudent = () => {
                   {/* <TableCell>{student.stu_aadhar}</TableCell> */}
                   <TableCell>{student.gender}</TableCell>
                   <TableCell >{getClassName(student.cls_id)}</TableCell>
-                  <TableCell>{student.eca_student}</TableCell>
+                  <TableCell>{student.scheme}</TableCell>
                   {/* Add more cells as needed */}
                 </TableRow>
               ))}
@@ -136,4 +134,4 @@ const EcaStudent = () => {
   );
 };
 
-export default EcaStudent;
+export default SchemeStudent;

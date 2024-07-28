@@ -5,7 +5,7 @@ const config = {
   // apiURL:`http://91.108.105.113:8080`,
   // apiURL:`https://dreampublicschoolorg.online`,
   // apiuRL:`https://backend.dreampublicschoolorg.online`,
-  // apiURL:`https://sampleschool.onrender.com`,
+  // apiURL:`https://dreamschoolupdate.onrender.com`,
   defaultPath: '/',
   fontFamily: `'Public Sans', sans-serif`,
   i18n: 'en',
