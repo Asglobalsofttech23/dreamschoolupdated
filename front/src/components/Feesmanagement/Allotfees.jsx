@@ -46,8 +46,9 @@ function Allotfees({ data, onClose }) {
             firstinstallment,
             secondinstallment,
             transport_fees,
+            total_fees: total, // Include totalfees in the form data to be sent to the backend
+            pending_fees: total,
             discount,
-            total_fees: total // Include totalfees in the form data to be sent to the backend
         };
 
         console.log(formData);

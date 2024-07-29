@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import { Link as RouterLink } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-// import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
-// import Link from '@mui/Link';
-// import InputAdornment from '@mui/material/InputAdornment';
-// import IconButton from '@mui/material/materialIconButton';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-// import EyeOutlined from '@ant-design/icons/EyeOutlined';
-// import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import config from '../../../config'
+import { useNavigate } from 'react-router-dom';
+import config from '../../../config';
 
 const AuthLogin = ({ isDemo = false }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,55 +22,40 @@ const AuthLogin = ({ isDemo = false }) => {
 
   useEffect(() => {
     axios.get(`${config.apiURL}/staffs/getStaffs`)
-      .then((res) => {
-        setStaffData(res.data)
-      })
-      .catch((err) => {
-        console.log("Error Staff Data fetching", err)
-      })
-  }, [])
+      .then((res) => setStaffData(res.data))
+      .catch((err) => console.log("Error Staff Data fetching", err));
+  }, []);
 
-  const handleAdminLogin = async (values) => {
+  const handleLogin = async (values) => {
     const { email, mobile } = values;
-    
-    // Check if the entered credentials match admin credentials
-    if (email === 'dreampublicschool@gmail.com' && mobile === '7708777736') {
-      sessionStorage.setItem('admin', true);
-      
-      if(sessionStorage.getItem("admin")){
-        navigate('/') 
-      window.location.reload();
-      }
 
-    }else if(email === 'super@gmail.com' && mobile === '1234567890'){
-      sessionStorage.setItem('super', true);
-      if(sessionStorage.getItem("super")){
-        navigate('/')
-        window.location.reload();
+    // Check if the entered credentials match admin or superadmin credentials
+    const isAdmin = email === 'dreampublicschool@gmail.com' && mobile === '7708777736';
+    const isSuperAdmin = email === 'super@gmail.com' && mobile === '1234567890';
 
-    }}
-    
-    
-   
-  // If admin credentials are not correct, proceed to check staff data
-  const user = staffData.find(user => user.email === email && user.mobile === mobile);
-
-  if (user) {
-    sessionStorage.setItem('employeeLoggedIn', true);
-    sessionStorage.setItem('dept_id', user.dept_id);
-    sessionStorage.setItem('dept_name', user.dept_name);
-    sessionStorage.setItem('role_id', user.role_id);
-    sessionStorage.setItem('role_name', user.role_name);
-    sessionStorage.setItem('staff_id', user.staff_id);
-
-    if (sessionStorage.getItem("staff_id") && sessionStorage.getItem("role_id")) {
+    if (isAdmin || isSuperAdmin) {
+      sessionStorage.setItem(isAdmin ? 'admin' : 'super', true);
       navigate('/');
       window.location.reload();
+      return;
     }
-  } else {
-    setError('Invalid email or password');
-  }
-};
+
+    // If not admin/superadmin, check staff credentials
+    const user = staffData.find(user => user.email === email && user.mobile === mobile);
+
+    if (user) {
+      sessionStorage.setItem('employeeLoggedIn', true);
+      sessionStorage.setItem('dept_id', user.dept_id);
+      sessionStorage.setItem('dept_name', user.dept_name);
+      sessionStorage.setItem('role_id', user.role_id);
+      sessionStorage.setItem('role_name', user.role_name);
+      sessionStorage.setItem('staff_id', user.staff_id);
+      navigate('/');
+      window.location.reload();
+    } else {
+      setError('Invalid email or password');
+    }
+  };
 
   return (
     <>
@@ -93,7 +71,7 @@ const AuthLogin = ({ isDemo = false }) => {
         })}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
-          handleAdminLogin(values).finally(() => {
+          handleLogin(values).finally(() => {
             setSubmitting(false);
           });
         }}
@@ -124,11 +102,11 @@ const AuthLogin = ({ isDemo = false }) => {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="password-login">Mobile Number</InputLabel>
+                  <InputLabel htmlFor="mobile-login">Mobile Number</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.mobile && errors.mobile)}
-                    id="mobile"
+                    id="mobile-login"
                     type="tel"
                     value={values.mobile}
                     name="mobile"
@@ -138,7 +116,7 @@ const AuthLogin = ({ isDemo = false }) => {
                   />
                 </Stack>
                 {touched.mobile && errors.mobile && (
-                  <FormHelperText error id="standard-weight-helper-text-mobile">
+                  <FormHelperText error id="standard-weight-helper-text-mobile-login">
                     {errors.mobile}
                   </FormHelperText>
                 )}

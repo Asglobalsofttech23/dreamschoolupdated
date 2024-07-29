@@ -48,6 +48,7 @@
     "react-apexcharts": "^1.4.1",
     "react-awesome-reveal": "^4.2.12",
     "react-bootstrap": "^2.10.2",
+    "react-calendar": "^5.0.0",
     "react-chartjs-2": "^5.2.0",
     "react-copy-to-clipboard": "^5.1.0",
     "react-device-detect": "^2.2.3",

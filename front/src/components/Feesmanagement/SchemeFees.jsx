@@ -1,46 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, IconButton, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Edit, Delete, Print } from '@mui/icons-material';
 import axios from 'axios';
 import config from '../../config'; // Ensure you have the correct path to your config file
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
+import AddSchemeStudent from './AddSchemeStudent';
 
 const SchemeStudent = () => {
   const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [clsData, setClsData] = useState([]);
+  const [openAddStudent, setOpenAddStudent] = useState(false);
+  const [addData, setAddData] = useState(null);
   const [selectedClass, setSelectedClass] = useState('');
-  const [loading, setLoading] = useState(false); // State for loading
+  const [loading, setLoading] = useState(false);
+  const tableRef = useRef(null);
 
   useEffect(() => {
-    fetchClasses(); // Fetch class data on component mount
-    fetchVanStudents(); // Initial fetch of all van students
+    fetchClasses();
+    fetchStudents();
   }, []);
 
   useEffect(() => {
-    // Filter students whenever selectedClass changes
+    // Filter students whenever selectedClass or searchTerm changes
+    let filtered = [...students];
     if (selectedClass) {
-      const filtered = students.filter(student => student.cls_id == selectedClass);
-      setStudents(filtered);
-    //   setSelectedClass('')
+      filtered = filtered.filter(student => student.cls_id == selectedClass);
     }
-  }, [selectedClass]);
+    if (searchTerm) {
+      filtered = filtered.filter(student =>
+        student.stu_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setFilteredStudents(filtered);
+  }, [selectedClass, searchTerm, students]);
 
-  const fetchVanStudents = async () => {
-    setLoading(true); // Set loading to true when fetching data
+  const fetchStudents = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${config.apiURL}/schemestudents`);
       setStudents(response.data);
+      setFilteredStudents(response.data); // Initialize filteredStudents with all students
     } catch (err) {
-      console.log("Error fetching van students:", err);
+      console.log("Error fetching students:", err);
     } finally {
-      setLoading(false); // Set loading to false after fetching data
+      setLoading(false);
     }
   };
 
@@ -49,7 +53,7 @@ const SchemeStudent = () => {
       const response = await axios.get(`${config.apiURL}/clsAndSec/getClass`);
       setClsData(response.data);
     } catch (err) {
-      console.log("Error fetching Class data", err);
+      console.log("Error fetching classes:", err);
     }
   };
 
@@ -58,18 +62,39 @@ const SchemeStudent = () => {
   };
 
   const handleClassChange = (e) => {
-    const classId = e.target.value;
-    setSelectedClass(classId); // Update selected class ID
+    setSelectedClass(e.target.value);
   };
 
   const handleAddStudent = () => {
-    // Logic to handle adding a student can go here
+    // setAddData(null);
+    setOpenAddStudent(true);
   };
 
-  const filteredStudents = students.filter(student =>
-    student.stu_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleEditStudent = (student) => {
+    setAddData(student);
+    setOpenAddStudent(true);
+  };
 
+  const handleDeleteStudent = async (studentId) => {
+    try {
+      await axios.delete(`${config.apiURL}/Schemestudents/${studentId}`);
+      fetchStudents(); // Refresh the student list
+    } catch (err) {
+      console.log("Error deleting student:", err);
+    }
+  };
+
+  const handlePrint = () => {
+    const printContent = tableRef.current.innerHTML;
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write('<html><head><title>Print</title>');
+    printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } table, th, td { border: 1px solid black; } th, td { padding: 8px; text-align: left; } .no-print { display: none; } @media print { .no-print { display: none; } }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContent);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  };
   const getClassName = (classId) => {
     const classData = clsData.find(cls => cls.cls_id == classId);
     return classData ? classData.cls_name : 'N/A';
@@ -87,6 +112,7 @@ const SchemeStudent = () => {
           onChange={handleClassChange}
           label="Class"
         >
+          <MenuItem value=""><em>All Classes</em></MenuItem>
           {clsData.map((cls) => (
             <MenuItem key={cls.cls_id} value={cls.cls_id}>{cls.cls_name}</MenuItem>
           ))}
@@ -98,20 +124,28 @@ const SchemeStudent = () => {
         onChange={handleSearchChange}
         style={{ marginBottom: 16 }}
       />
-      {loading ? ( // Show loading indicator while data is being fetched
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handlePrint}
+        style={{ marginBottom: 16, marginLeft: 16 }}
+      >
+        <Print />
+        Print
+      </Button>
+      {loading ? (
         <CircularProgress />
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} ref={tableRef}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell>Name</TableCell>
-                {/* <TableCell>Aadhar</TableCell> */}
                 <TableCell>Gender</TableCell>
                 <TableCell>Class</TableCell>
-                <TableCell>Scheme Fees</TableCell>
-                {/* Add more columns as needed */}
+                <TableCell>Scheme Amount</TableCell>
+                <TableCell className="no-print">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -119,17 +153,31 @@ const SchemeStudent = () => {
                 <TableRow key={student.stu_id}>
                   <TableCell>{student.stu_id}</TableCell>
                   <TableCell>{student.stu_name}</TableCell>
-                  {/* <TableCell>{student.stu_aadhar}</TableCell> */}
                   <TableCell>{student.gender}</TableCell>
-                  <TableCell >{getClassName(student.cls_id)}</TableCell>
+                  <TableCell>{getClassName(student.cls_id)}</TableCell>
                   <TableCell>{student.scheme}</TableCell>
-                  {/* Add more cells as needed */}
+                  <TableCell className="no-print">
+                    {/* <IconButton onClick={() => handleEditStudent(student)}>
+                      <Edit />
+                    </IconButton> */}
+                    <IconButton color="error" onClick={() => handleDeleteStudent(student.stu_id)}>
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       )}
+      <Dialog open={openAddStudent} onClose={() => setOpenAddStudent(false)}>
+        <DialogContent>
+          <AddSchemeStudent data={addData} onClose={() => setOpenAddStudent(false)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenAddStudent(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

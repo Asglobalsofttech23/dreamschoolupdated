@@ -20,6 +20,27 @@ module.exports = (db) => {
         }
       });
 
+
+      router.get(`/getClass/:classId`,async(req,res)=>{
+        try{
+          const class_id =req.params.classId
+          console.log(class_id);
+          const getQuery= `select * from class where cls_id =?`
+          const [results]= await db.query(getQuery,class_id)
+          if (results.length == 0) {
+            return res.status(404).json({ message: " data not found." });
+          } else {
+           
+            
+            return res.status(200).json(results);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          return res.status(500).json({ message: "Internal server error." });
+        }
+        
+        })
+      
     router.get("/getSection", async (req, res) => {
         try {
           const getQuery = `select * from sections`;

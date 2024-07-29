@@ -1,75 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';
-import './Chart.css';
-import config from '../../config';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-const StudentStrengthChart = () => {
-  const [chartData, setChartData] = useState(null);
-
-  // Fetch data from backend
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${config.apiURL}/students/studentscount`); // Replace with your API endpoint
-        const data = response.data;
-     console.log(data)
-        // Process the data into the format expected by Chart.js
-        const chartData = {
-          labels: data.map(item => item.year),
-          datasets: [
-            {
-              label: 'Student Strength',
-              data: data.map(item => item.student_count),
-              backgroundColor: 'rgba(75, 192, 192, 0.5)',
-              borderColor: 'black',
-              borderWidth: 2,
-            },
-          ],
-        };
-
-        setChartData(chartData);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Yearly Student Strength',
-      },
-    },
-  };
-
-  return (
-    <div style={{ margin: "auto" }}>
-      {chartData && <Bar data={chartData} options={options} />}
-    </div>
-  );
-};
-
-export default StudentStrengthChart;
-
 // import React, { useState, useEffect } from 'react';
-// import { Doughnut } from 'react-chartjs-2';
-// import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, Title, Tooltip, Legend } from 'chart.js';
+// import { Bar } from 'react-chartjs-2';
+// import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 // import axios from 'axios';
 // import './Chart.css';
 // import config from '../../config';
 
-// ChartJS.register(CategoryScale, LinearScale, ArcElement, Title, Tooltip, Legend);
+// ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 // const StudentStrengthChart = () => {
 //   const [chartData, setChartData] = useState(null);
@@ -80,8 +16,7 @@ export default StudentStrengthChart;
 //       try {
 //         const response = await axios.get(`${config.apiURL}/students/studentscount`); // Replace with your API endpoint
 //         const data = response.data;
-//         console.log(data);
-
+//      console.log(data)
 //         // Process the data into the format expected by Chart.js
 //         const chartData = {
 //           labels: data.map(item => item.year),
@@ -89,30 +24,8 @@ export default StudentStrengthChart;
 //             {
 //               label: 'Student Strength',
 //               data: data.map(item => item.student_count),
-//               backgroundColor: [
-//                 'red',
-//                 'blue',
-//                 'yellow',
-//                 'green',
-//                 'pruple',
-//                 'orange',
-//                 // 'rgba(255, 99, 132, 0.6)',   'Red',
-//                 // 'rgba(54, 162, 235, 0.6)',    Blue
-//                 'rgba(255, 206, 86, 0.6)',   // Yellow
-//                 'rgba(75, 192, 192, 0.6)',   // Green
-//                 'rgba(153, 102, 255, 0.6)',  // Purple
-//                 'rgba(255, 159, 64, 0.6)',   // Orange
-//                 'rgba(199, 199, 199, 0.6)'   // Grey
-//               ],
-//               borderColor: [
-//                 'rgba(255, 99, 132, 1)',
-//                 'rgba(54, 162, 235, 1)',
-//                 'rgba(255, 206, 86, 1)',
-//                 'rgba(75, 192, 192, 1)',
-//                 'rgba(153, 102, 255, 1)',
-//                 'rgba(255, 159, 64, 1)',
-//                 'rgba(199, 199, 199, 1)'
-//               ],
+//               backgroundColor: 'rgba(75, 192, 192, 0.5)',
+//               borderColor: 'black',
 //               borderWidth: 2,
 //             },
 //           ],
@@ -142,10 +55,184 @@ export default StudentStrengthChart;
 
 //   return (
 //     <div style={{ margin: "auto" }}>
-//       {chartData && <Doughnut data={chartData} options={options} />}
+//       {chartData && <Bar data={chartData} options={options} />}
 //     </div>
 //   );
 // };
 
 // export default StudentStrengthChart;
+
+// // import React, { useState, useEffect } from 'react';
+// // import { Doughnut } from 'react-chartjs-2';
+// // import { Chart as ChartJS, CategoryScale, LinearScale, ArcElement, Title, Tooltip, Legend } from 'chart.js';
+// // import axios from 'axios';
+// // import './Chart.css';
+// // import config from '../../config';
+
+// // ChartJS.register(CategoryScale, LinearScale, ArcElement, Title, Tooltip, Legend);
+
+// // const StudentStrengthChart = () => {
+// //   const [chartData, setChartData] = useState(null);
+
+// //   // Fetch data from backend
+// //   useEffect(() => {
+// //     const fetchData = async () => {
+// //       try {
+// //         const response = await axios.get(`${config.apiURL}/students/studentscount`); // Replace with your API endpoint
+// //         const data = response.data;
+// //         console.log(data);
+
+// //         // Process the data into the format expected by Chart.js
+// //         const chartData = {
+// //           labels: data.map(item => item.year),
+// //           datasets: [
+// //             {
+// //               label: 'Student Strength',
+// //               data: data.map(item => item.student_count),
+// //               backgroundColor: [
+// //                 'red',
+// //                 'blue',
+// //                 'yellow',
+// //                 'green',
+// //                 'pruple',
+// //                 'orange',
+// //                 // 'rgba(255, 99, 132, 0.6)',   'Red',
+// //                 // 'rgba(54, 162, 235, 0.6)',    Blue
+// //                 'rgba(255, 206, 86, 0.6)',   // Yellow
+// //                 'rgba(75, 192, 192, 0.6)',   // Green
+// //                 'rgba(153, 102, 255, 0.6)',  // Purple
+// //                 'rgba(255, 159, 64, 0.6)',   // Orange
+// //                 'rgba(199, 199, 199, 0.6)'   // Grey
+// //               ],
+// //               borderColor: [
+// //                 'rgba(255, 99, 132, 1)',
+// //                 'rgba(54, 162, 235, 1)',
+// //                 'rgba(255, 206, 86, 1)',
+// //                 'rgba(75, 192, 192, 1)',
+// //                 'rgba(153, 102, 255, 1)',
+// //                 'rgba(255, 159, 64, 1)',
+// //                 'rgba(199, 199, 199, 1)'
+// //               ],
+// //               borderWidth: 2,
+// //             },
+// //           ],
+// //         };
+
+// //         setChartData(chartData);
+// //       } catch (error) {
+// //         console.error('Error fetching data: ', error);
+// //       }
+// //     };
+
+// //     fetchData();
+// //   }, []);
+
+// //   const options = {
+// //     responsive: true,
+// //     plugins: {
+// //       legend: {
+// //         position: 'top',
+// //       },
+// //       title: {
+// //         display: true,
+// //         text: 'Yearly Student Strength',
+// //       },
+// //     },
+// //   };
+
+// //   return (
+// //     <div style={{ margin: "auto" }}>
+// //       {chartData && <Doughnut data={chartData} options={options} />}
+// //     </div>
+// //   );
+// // };
+
+// // export default StudentStrengthChart;
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import axios from 'axios';
+import './Chart.css';
+import config from '../../config';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const StudentStrengthPieChart = () => {
+  const [chartData, setChartData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${config.apiURL}/students/studentscount`);
+        const data = response.data;
+        console.log(data);
+
+        // Prepare data for the pie chart
+        const chartData = {
+          labels: data.map(item => item.year),
+          datasets: [
+            {
+              label: 'Student Strength',
+              data: data.map(item => item.student_count),
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)',
+              ],
+              borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+              ],
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        setChartData(chartData);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem) {
+            return `${tooltipItem.label}: ${tooltipItem.raw} students`;
+          }
+        }
+      }
+    },
+  };
+
+  return (
+    <div style={{ margin: "auto", width: "80%" }}>
+      {chartData && <Pie data={chartData} options={options} />}
+    </div>
+  );
+};
+
+export default StudentStrengthPieChart;
 

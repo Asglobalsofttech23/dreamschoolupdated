@@ -1,11 +1,12 @@
 // ==============================|| THEME CONFIG  ||============================== //
 
 const config = {
-  apiURL:`http://localhost:2000`,
+  // apiURL:`http://localhost:2000`,
   // apiURL:`http://91.108.105.113:8080`,
   // apiURL:`https://dreampublicschoolorg.online`,
   // apiuRL:`https://backend.dreampublicschoolorg.online`,
   // apiURL:`https://dreamschoolupdate.onrender.com`,
+  apiURL:`https://backend.dreampublicschoolorg.online`,
   defaultPath: '/',
   fontFamily: `'Public Sans', sans-serif`,
   i18n: 'en',

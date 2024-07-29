@@ -72,24 +72,31 @@ const superadminRoutes = {
   children: [
     {
       path: '/',
-      element: <SuperDashboardDefault />
+      element: <DashboardDefault />
     },
-    // {
-    //   path: '/superAdmin',
-    //   element: <SuperDashboardDefault />
-    // },
-    {
-      path: 'allStudents',
-      element: <AllStudents />,
-    },
-    // {
-    //   path: 'addStudent',
-    //   element: <StudentApplication />,
-    // },
-
     {
       path:'Booking',
       element:<StudentBookingApplication/>,
+    },
+    {
+      path:'StudentsBooking',
+      element:<AllBookingStudents/>,
+    },
+    {
+      path: 'newAdmission',
+      element: <EnquiryStudents />,
+    },
+    {
+      path:'StudentsAdmisson',
+      element:<StudentAdmissionApplication/>,
+    },
+    {
+      path: 'allstudentlist',
+      element: <AllStudents />,
+    },
+    {
+      path: 'addStudent',
+      element: <StudentApplication />,
     },
     {
       path: 'uploadExcel',
@@ -211,10 +218,21 @@ const superadminRoutes = {
       element: <ClassList/>,
     },
     {
-      path: 'viewStudents/:id',
+      path: 'viewStudents/:classId',
       element: <ViewStudents/>,
     },
-
+    {
+      path: 'vanfees',
+      element: <VanStudent/>,
+    },
+    {
+      path: 'ecafees',
+      element: <EcaStudent/>,
+    },
+    {
+      path: 'schemefees',
+      element: <SchemeStudent/>,
+    },
     {
       path: 'dashboard',
       children: [

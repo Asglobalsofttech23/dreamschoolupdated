@@ -66,13 +66,13 @@ import {
     //     url: '/exams',
     //     icon: icons.SchoolIcon
     //   },
-    //   {
-    //     id: 'Profile',
-    //     title: 'Profile',
-    //     type: 'item',
-    //     url: '/profile',
-    //     icon: icons.SchoolIcon
-    //   },
+      // {
+      //   id: 'Profile',
+      //   title: 'Profile',
+      //   type: 'item',
+      //   url: '/profile',
+      //   icon: icons.SchoolIcon
+      // },
     //   {
     //     id: 'TimeTable',
     //     title: 'TimeTable',
@@ -93,20 +93,20 @@ import {
     type: 'group',
     children: [
      
-      // {
-      //   id: 'class-students',
-      //   title: 'class-Students',
-      //   type: 'item',
-      //   url: '/classstudents',
-      //   icon: icons.SchoolIcon
-      // },
       {
         id: 'class-students',
-        title: 'Teacher',
+        title: 'class-Students',
         type: 'item',
         url: '/classstudents',
         icon: icons.SchoolIcon
       },
+      // {
+      //   id: 'class-students',
+      //   title: 'Teacher',
+      //   type: 'item',
+      //   url: '/classstudents',
+      //   icon: icons.SchoolIcon
+      // },
       {
         id: 'Attendance',
         title: 'Attendance',
@@ -143,6 +143,7 @@ import {
   }
   const teacherdomains = sessionStorage.getItem("admin") ? teachersdomain :
   sessionStorage.getItem("super") ? teachersdomain :
-  sessionStorage.getItem("employeeLoggedIn") ? teacherdomain :''
+   sessionStorage.getItem("employeeLoggedIn") ? teacherdomain :
+  sessionStorage.getItem("employeeLoggedIn") ? teachersdomain :''
   export default teacherdomains;
   
