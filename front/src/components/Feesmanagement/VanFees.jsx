@@ -64,6 +64,7 @@ const VanStudent = () => {
     };
 
     const handleAddStudent = () => {
+        setAddData(null); // Clear previous data
         setOpenAddStudent(true);
     };
 
@@ -102,18 +103,25 @@ const VanStudent = () => {
         student.stu_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const handleClose = () => {
+        setOpenAddStudent(false);
+        fetchVanStudents(); // Refresh the student list after closing the dialog
+    };
+
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleAddStudent}>
+            <Button variant="contained" color="primary"
+             style={{ marginBottom: 16, marginLeft: 16 }} onClick={handleAddStudent}>
                 Add Student
             </Button>
-            <FormControl variant="outlined" style={{ minWidth: 120, marginRight: 16 }}>
+            <FormControl variant="outlined" style={{ minWidth: 120,marginLeft: 16, marginRight: 16 }}>
                 <InputLabel>Class</InputLabel>
                 <Select
                     value={selectedClass}
                     onChange={handleClassChange}
                     label="Class"
-                > <MenuItem value=""><em>All Classes</em></MenuItem>
+                >
+                    <MenuItem value=""><em>All Classes</em></MenuItem>
                     {clsData.map((cls) => (
                         <MenuItem key={cls.cls_id} value={cls.cls_id}>{cls.cls_name}</MenuItem>
                     ))}
@@ -127,7 +135,7 @@ const VanStudent = () => {
             />
             <Button
                 variant="contained"
-                color="secondary"
+                color="primary"
                 onClick={handlePrint}
                 style={{ marginBottom: 16, marginLeft: 16 }}
             >
@@ -140,13 +148,13 @@ const VanStudent = () => {
                 <TableContainer component={Paper} ref={tableRef}>
                     <Table>
                         <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Gender</TableCell>
-                                <TableCell>Class</TableCell>
-                                <TableCell>Van Fees</TableCell>
-                                <TableCell className="no-print">Actions</TableCell> {/* Added class for hiding on print */}
+                            <TableRow style={{backgroundColor:"black",}}>
+                                <TableCell style={{color:"white",}}>ID</TableCell>
+                                <TableCell style={{color:"white",}}>Name</TableCell>
+                                <TableCell style={{color:"white",}}>Gender</TableCell>
+                                <TableCell style={{color:"white",}}>Class</TableCell>
+                                <TableCell style={{color:"white",}}>Van Fees</TableCell>
+                                <TableCell style={{color:"white",}}className="no-print">Actions</TableCell> {/* Added class for hiding on print */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -161,7 +169,7 @@ const VanStudent = () => {
                                         {/* <IconButton onClick={() => handleEditStudent(student)}>
                                             <Edit />
                                         </IconButton> */}
-                                        <IconButton  color="error" onClick={() => handleDeleteStudent(student.stu_id)}>
+                                        <IconButton color="error" onClick={() => handleDeleteStudent(student.stu_id)}>
                                             <Delete />
                                         </IconButton>
                                     </TableCell>
@@ -171,12 +179,15 @@ const VanStudent = () => {
                     </Table>
                 </TableContainer>
             )}
-            <Dialog open={openAddStudent} onClose={() => setOpenAddStudent(false)}>
+            <Dialog open={openAddStudent} onClose={handleClose}>
                 <DialogContent>
-                    <AddVanStudent data={addData} onClose={() => setOpenAddStudent(false)} />
+                    <AddVanStudent 
+                        data={addData} 
+                        onClose={handleClose} 
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenAddStudent(false)}>Close</Button>
+                    <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
         </div>

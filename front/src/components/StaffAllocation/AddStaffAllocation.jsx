@@ -138,7 +138,7 @@ const AddStaffAllocation = () => {
 
         axios.post(`${config.apiURL}/staffAllocation/postStaffAllocation`,formData)
         .then((res)=>{
-            
+            alert(res.message)
             
             enqueueSnackbar('Staff alloated sucessfully', { variant: 'success' });
             navigate('/staffAllocationIndex')

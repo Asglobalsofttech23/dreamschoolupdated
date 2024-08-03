@@ -41,7 +41,7 @@ function Feespage() {
     } else {
       setError("No class ID provided");
     }
-  }, [cls_id, config.apiURL]);
+  }, [cls_id, config.apiURL,allocUpdateData,openUpdate]);
 
   
 

@@ -11,7 +11,7 @@ const EcaStudent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [clsData, setClsData] = useState([]);
   const [openAddStudent, setOpenAddStudent] = useState(false);
-  const [addData, setAddData] = useState();
+  const [addData, setAddData] = useState(null);
   const [selectedClass, setSelectedClass] = useState('');
   const [loading, setLoading] = useState(false); // State for loading
   const tableRef = useRef(null);
@@ -63,6 +63,7 @@ const EcaStudent = () => {
   };
 
   const handleAddStudent = () => {
+    setAddData(null); // Clear any existing data
     setOpenAddStudent(true);
   };
 
@@ -73,12 +74,12 @@ const EcaStudent = () => {
 
   const handleDeleteStudent = async (studentId) => {
     try {
-      await axios.delete(`${config.apiURL}/ecastudents/${studentId}`);
-      fetchEcaStudents(); // Refresh the student list
+        await axios.put(`${config.apiURL}/ecastudents/${studentId}`);
+        fetchEcaStudents(); // Refresh the student list
     } catch (err) {
-      console.log("Error deleting student:", err);
+        console.log("Error deleting student:", err);
     }
-  };
+};
 
   const handlePrint = () => {
     const printContent = tableRef.current.innerHTML;
@@ -101,19 +102,24 @@ const EcaStudent = () => {
     student.stu_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleAddStudentClose = () => {
+    setOpenAddStudent(false);
+    fetchEcaStudents(); // Refresh the student list after adding/editing
+  };
+
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleAddStudent}>
+      <Button variant="contained" color="primary"  style={{ marginBottom: 16, marginLeft: 16 }} onClick={handleAddStudent}>
         Add Student
       </Button>
-      <FormControl variant="outlined" style={{ minWidth: 120, marginRight: 16 }}>
+      <FormControl variant="outlined" style={{ minWidth: 120,marginLeft: 16, marginRight: 16 }}>
         <InputLabel>Class</InputLabel>
         <Select
           value={selectedClass}
           onChange={handleClassChange}
           label="Class"
         >
-            <MenuItem value=""><em>All Classes</em></MenuItem>
+          <MenuItem value=""><em>All Classes</em></MenuItem>
           {clsData.map((cls) => (
             <MenuItem key={cls.cls_id} value={cls.cls_id}>{cls.cls_name}</MenuItem>
           ))}
@@ -127,7 +133,7 @@ const EcaStudent = () => {
       />
       <Button
         variant="contained"
-        color="secondary"
+        color="primary"
         onClick={handlePrint}
         style={{ marginBottom: 16, marginLeft: 16 }}
       >
@@ -141,13 +147,13 @@ const EcaStudent = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>ID</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Name</TableCell>
                 {/* <TableCell>Aadhar</TableCell> */}
-                <TableCell>Gender</TableCell>
-                <TableCell>Class</TableCell>
-                <TableCell>ECA Fees</TableCell>
-                <TableCell className="no-print">Actions</TableCell> {/* Added class for hiding on print */}
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Gender</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Class</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>ECA Fees</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}} className="no-print">Actions</TableCell> {/* Added class for hiding on print */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -175,7 +181,7 @@ const EcaStudent = () => {
       )}
       <Dialog open={openAddStudent} onClose={() => setOpenAddStudent(false)}>
         <DialogContent>
-          <AddEcaStudent data={addData} onClose={() => setOpenAddStudent(false)} />
+          <AddEcaStudent data={addData} onClose={handleAddStudentClose} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenAddStudent(false)}>Close</Button>

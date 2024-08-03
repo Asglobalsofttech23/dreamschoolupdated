@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, IconButton, Dialog, DialogActions, DialogContent } from '@mui/material';
-import { Edit, Delete, Print } from '@mui/icons-material';
+import { Delete, Print } from '@mui/icons-material';
 import axios from 'axios';
 import config from '../../config'; // Ensure you have the correct path to your config file
 import AddSchemeStudent from './AddSchemeStudent';
@@ -22,7 +22,6 @@ const SchemeStudent = () => {
   }, []);
 
   useEffect(() => {
-    // Filter students whenever selectedClass or searchTerm changes
     let filtered = [...students];
     if (selectedClass) {
       filtered = filtered.filter(student => student.cls_id == selectedClass);
@@ -40,7 +39,7 @@ const SchemeStudent = () => {
     try {
       const response = await axios.get(`${config.apiURL}/schemestudents`);
       setStudents(response.data);
-      setFilteredStudents(response.data); // Initialize filteredStudents with all students
+      setFilteredStudents(response.data);
     } catch (err) {
       console.log("Error fetching students:", err);
     } finally {
@@ -66,7 +65,7 @@ const SchemeStudent = () => {
   };
 
   const handleAddStudent = () => {
-    // setAddData(null);
+    setAddData(null);
     setOpenAddStudent(true);
   };
 
@@ -77,8 +76,8 @@ const SchemeStudent = () => {
 
   const handleDeleteStudent = async (studentId) => {
     try {
-      await axios.delete(`${config.apiURL}/Schemestudents/${studentId}`);
-      fetchStudents(); // Refresh the student list
+      await axios.put(`${config.apiURL}/Schemestudents/${studentId}`);
+      fetchStudents();
     } catch (err) {
       console.log("Error deleting student:", err);
     }
@@ -95,17 +94,24 @@ const SchemeStudent = () => {
     printWindow.document.close();
     printWindow.print();
   };
+
   const getClassName = (classId) => {
     const classData = clsData.find(cls => cls.cls_id == classId);
     return classData ? classData.cls_name : 'N/A';
   };
 
+  const handleAddStudentClose = () => {
+    setOpenAddStudent(false);
+    fetchStudents();
+  };
+
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleAddStudent}>
+      <Button variant="contained" color="primary"
+       style={{ marginBottom: 16, marginLeft: 16 }} onClick={handleAddStudent}>
         Add Student
       </Button>
-      <FormControl variant="outlined" style={{ minWidth: 120, marginRight: 16 }}>
+      <FormControl variant="outlined" style={{ minWidth: 120,marginLeft:20, marginRight: 16 }}>
         <InputLabel>Class</InputLabel>
         <Select
           value={selectedClass}
@@ -140,12 +146,12 @@ const SchemeStudent = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Class</TableCell>
-                <TableCell>Scheme Amount</TableCell>
-                <TableCell className="no-print">Actions</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>ID</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Name</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Gender</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Class</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}}>Scheme Amount</TableCell>
+                <TableCell style={{color:"white",backgroundColor:"black"}} className="no-print">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -170,12 +176,12 @@ const SchemeStudent = () => {
           </Table>
         </TableContainer>
       )}
-      <Dialog open={openAddStudent} onClose={() => setOpenAddStudent(false)}>
+      <Dialog open={openAddStudent} onClose={handleAddStudentClose}>
         <DialogContent>
-          <AddSchemeStudent data={addData} onClose={() => setOpenAddStudent(false)} />
+          <AddSchemeStudent data={addData} onClose={handleAddStudentClose} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenAddStudent(false)}>Close</Button>
+          <Button onClick={handleAddStudentClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>

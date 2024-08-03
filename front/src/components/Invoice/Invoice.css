@@ -31,6 +31,7 @@
   
   .receipt-details {
     text-align: right;
+    margin-right: 20px;
   }
   
   .invoice-table {
@@ -92,6 +93,13 @@
     .invoice-container,
     .invoice-container * {
       visibility: visible;
+      
+    }
+    tr{
+      color: black;
+    }
+    .invoice-table th{
+      color: black;
     }
     .invoice-container {
       position: absolute;

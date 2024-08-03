@@ -33,7 +33,7 @@ function FeesAllocmanu() {
       .catch((err) => {
         console.log("Error fetching class data", err);
       });
-  }, []);
+  }, [classes]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -513,7 +513,7 @@ function EnquiryStudents() {
       .catch((err) => {
         console.log('Error:', err);
       });
-  }, [openUpdate, openAddBooking, openAddEnquiry, dlt]);
+  }, [openUpdate,openAddEnquiry, openAddBooking, , dlt]);
 
   
   useEffect(() => {
@@ -609,9 +609,9 @@ function EnquiryStudents() {
       <Grid container spacing={3}>
         <Grid item xs={4}>
           <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleAddEnquiry}>New Admission</Button>
-          <Link to='/uploadExcel' className='ms-2'>
+          {/* <Link to='/uploadExcel' className='ms-2'>
             <Button variant="contained" color="success">Upload Excel</Button>
-          </Link>
+          </Link> */}
         </Grid>
         <Grid item xs={4}>
           <TextField label="Search" onChange={(e) => setSearchedVal(e.target.value)} value={searchedVal} />

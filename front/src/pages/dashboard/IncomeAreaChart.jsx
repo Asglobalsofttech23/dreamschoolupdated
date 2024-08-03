@@ -228,7 +228,7 @@ const StudentStrengthPieChart = () => {
   };
 
   return (
-    <div style={{ margin: "auto", width: "80%" }}>
+    <div style={{ margin: "auto", width: "50%" }}>
       {chartData && <Pie data={chartData} options={options} />}
     </div>
   );

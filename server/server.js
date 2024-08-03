@@ -40,17 +40,17 @@ const upload = multer({ storage: storage });
 const uploadExcel = multer({storage: storageExcel});
 
 const db = mysql.createPool({
-    host: "127.0.0.1",
-    port: "3306",
-    user: "root",
-    password: "0210",
-    database: "school"
+    // host: "127.0.0.1",
+    // port: "3306",
+    // user: "root",
+    // password: "0210",
+    // database: "school"
 
-    // host:'193.203.184.74',
-    // port:"3306",
-    // user:'u534462265_dreamschool',
-    // password:'ASGlobal@12345',
-    // database:'u534462265_dreamschool'
+    host:'193.203.184.74',
+    port:"3306",
+    user:'u534462265_exschool',
+    password:'ASGlobal@12345',
+    database:'u534462265_exschool'
 
 });
 
@@ -165,7 +165,7 @@ app.put('/allfeesalloc/:stu_id', async (req, res) => {
   
       const stu_id = req.params.stu_id;
       const putQuery = `UPDATE students_master SET tution_fees = ?, transport_fees = ?, additional_fees = ?, firstinstallment = ?, secondinstallment = ?, discount = ?, total_fees = ?, pending_fees = ? WHERE stu_id = ?`;
-      const [results] = await db.query(putQuery, [tution_fees, transport_fees, additional_fees, firstinstallment, secondinstallment, discount, total_fees, pending_fees, stu_id]);
+      const [results] = await db.query(putQuery, [tution_fees, transport_fees, additional_fees, firstinstallment, secondinstallment, discount|| null, total_fees, pending_fees, stu_id]);
   
       if (results.affectedRows === 0) {
         return res.status(404).json({ message: "Student data not found or no changes made." });
@@ -178,102 +178,201 @@ app.put('/allfeesalloc/:stu_id', async (req, res) => {
     }
   });
 
+//   app.post('/addVanStudent', async (req, res) => {
+//     const { studentIds, vanFees } = req.body;
 
-  app.post('/addVanStudent', async (req, res) => {
-    const { studentIds, vanFees } = req.body;
+//     console.log(studentIds, vanFees);
+
+//     if (!studentIds || !vanFees) {
+//         return res.status(400).json({ message: 'Student IDs and van fees are required' });
+//     }
+
+//     try {
+//         // Create the query for updating students
+//         const query = `
+//             UPDATE students_master 
+//             SET van = ?, van_student = 'yes'
+//             WHERE stu_id IN (?)
+//         `;
+
+//         // Promisify the db.query method for using async/await
+//         const queryAsync = (query, params) => {
+//             return new Promise((resolve, reject) => {
+//                 db.query(query, params, (err, result) => {
+//                     if (err) {
+//                         return reject(err);
+//                     }
+//                     resolve(result);
+//                 });
+//             });
+//         };
+
+//         const result = await queryAsync(query, [vanFees, studentIds]);
+
+//         if (result.affectedRows === 0) {
+//             console.log("No rows updated");
+//             return res.status(404).json({ message: 'No students found or updated' });
+//         } else {
+//             console.log("Rows updated successfully");
+//             return res.status(201).json({ message: 'Students updated successfully' });
+//         }
+//     } catch (err) {
+//         console.error("Error updating students:", err);
+//         return res.status(500).json({ message: 'Internal server error' });
+//     }
+// });
+app.post('/addVanStudent', async (req, res) => {
+  console.log("Received data:", req.body);
+  const { studentIds, vanFees } = req.body;
+
+  if (!studentIds || !vanFees) {
+    return res.status(400).json({ message: 'Student IDs and van fees are required' });
+  }
+
+  try {
+    // Start a transaction
+    await db.query('START TRANSACTION');
+
+    // Update van fees and set van_student to 'yes' for the provided student IDs
+    const updateQuery = `UPDATE students_master SET van = ?, van_student = 'yes' WHERE stu_id IN (?)`;
+    const [result] = await db.query(updateQuery, [vanFees, studentIds]);
+
+    if (result.affectedRows === 0) {
+      console.log("No rows updated");
+      await db.query('ROLLBACK');
+      return res.status(404).json({ message: 'No students found or updated' });
+    }
+
+    // Commit the transaction
+    await db.query('COMMIT');
+    console.log("Rows updated successfully");
+    return res.status(201).json({ message: 'Students updated successfully' });
+  } catch (error) {
+    console.error("Error updating students:", error);
+    await db.query('ROLLBACK'); // Rollback in case of error
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.post('/addEcaStudent', async (req, res) => {
+  console.log("Received data:", req.body);
+  const { studentIds, ecaFees } = req.body;
+
+  if (!studentIds || !ecaFees) {
+    return res.status(400).json({ message: 'Student IDs and van fees are required' });
+  }
+
+  try {
+    // Start a transaction
+    await db.query('START TRANSACTION');
+
+    // Update van fees and set van_student to 'yes' for the provided student IDs
+    const updateQuery = `UPDATE students_master SET eca_fees = ?, eca_student = 'yes' WHERE stu_id IN (?) `;
+    const [result] = await db.query(updateQuery, [ecaFees, studentIds]);
+
+    if (result.affectedRows === 0) {
+      console.log("No rows updated");
+      await db.query('ROLLBACK');
+      return res.status(404).json({ message: 'No students found or updated' });
+    }
+
+    // Commit the transaction
+    await db.query('COMMIT');
+    console.log("Rows updated successfully");
+    return res.status(201).json({ message: 'Students updated successfully' });
+  } catch (error) {
+    console.error("Error updating students:", error);
+    await db.query('ROLLBACK'); // Rollback in case of error
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+  // app.post('/addEcaStudent', async (req, res) => {
+  //   const { studentIds, ecaFees } = req.body;
   
-    console.log(studentIds, vanFees);
+  //   console.log(studentIds, ecaFees);
   
-    if (!studentIds || !vanFees) {
+  //   if (!studentIds || !ecaFees) {
+  //     return res.status(400).json({ message: 'Student IDs and Eca fees are required' });
+  //   }
+  
+  //   // Create the query for updating students
+  //   const query = `UPDATE students_master SET eca_fees = ?, eca_student = 'yes' WHERE stu_id IN (?) `;
+  
+  //   db.query(query, [ecaFees, studentIds], (err, result) => {
+  //     if (err) {
+  //       console.error("Error updating students:", err);
+  //       return res.status(500).json({ message: 'Internal server error' });
+  //     }
+  
+  //     if (result.affectedRows === 0) {
+  //       console.log("No rows updated");
+  //       return res.status(404).json({ message: 'No students found or updated' });
+  //     } else {
+  //       console.log("Rows updated successfully");
+  //       return res.status(200).json({ message: 'Students updated successfully' });
+  //     }
+  //   });
+  // });
+  app.post('/addschemeStudent', async (req, res) => {
+    console.log("Received data:", req.body);
+    const { studentIds, schemeFees } = req.body;
+  
+    if (!studentIds || !schemeFees) {
       return res.status(400).json({ message: 'Student IDs and van fees are required' });
     }
   
-    // Create the query for updating students
-    const query = `
-      UPDATE students_master 
-      SET van = ?, van_student = 'yes'
-      WHERE stu_id IN (?)
-    `;
+    try {
+      // Start a transaction
+      await db.query('START TRANSACTION');
   
-    db.query(query, [vanFees, studentIds], (err, result) => {
-      if (err) {
-        console.error("Error updating students:", err);
-        return res.status(500).json({ message: 'Internal server error' });
-      }
+      // Update van fees and set van_student to 'yes' for the provided student IDs
+      const updateQuery = `UPDATE students_master SET scheme = ?, scheme_student = 'yes' WHERE stu_id IN (?)`;
+      const [result] = await db.query(updateQuery, [schemeFees, studentIds]);
   
       if (result.affectedRows === 0) {
         console.log("No rows updated");
+        await db.query('ROLLBACK');
         return res.status(404).json({ message: 'No students found or updated' });
-      } else {
-        console.log("Rows updated successfully");
-        return res.status(200).json({ message: 'Students updated successfully' });
       }
-    });
-  });
   
-  app.post('/addEcaStudent', async (req, res) => {
-    const { studentIds, ecaFees } = req.body;
-  
-    console.log(studentIds, ecaFees);
-  
-    if (!studentIds || !ecaFees) {
-      return res.status(400).json({ message: 'Student IDs and Eca fees are required' });
+      // Commit the transaction
+      await db.query('COMMIT');
+      console.log("Rows updated successfully");
+      return res.status(201).json({ message: 'Students updated successfully' });
+    } catch (error) {
+      console.error("Error updating students:", error);
+      await db.query('ROLLBACK'); // Rollback in case of error
+      res.status(500).json({ message: 'Internal server error' });
     }
-  
-    // Create the query for updating students
-    const query = `
-      UPDATE students_master 
-      SET eca_fees = ?, eca_student = 'yes'
-      WHERE stu_id IN (?)
-    `;
-  
-    db.query(query, [ecaFees, studentIds], (err, result) => {
-      if (err) {
-        console.error("Error updating students:", err);
-        return res.status(500).json({ message: 'Internal server error' });
-      }
-  
-      if (result.affectedRows === 0) {
-        console.log("No rows updated");
-        return res.status(404).json({ message: 'No students found or updated' });
-      } else {
-        console.log("Rows updated successfully");
-        return res.status(200).json({ message: 'Students updated successfully' });
-      }
-    });
   });
+
+  // app.post('/addschemeStudent', async (req, res) => {
+  //   const { studentIds, schemeFees } = req.body;
   
-  app.post('/addschemeStudent', async (req, res) => {
-    const { studentIds, schemeFees } = req.body;
+  //   console.log(studentIds, schemeFees);
   
-    console.log(studentIds, schemeFees);
+  //   if (!studentIds || !schemeFees) {
+  //     return res.status(400).json({ message: 'Student IDs and Scheme fees are required' });
+  //   }
   
-    if (!studentIds || !schemeFees) {
-      return res.status(400).json({ message: 'Student IDs and Scheme fees are required' });
-    }
+  //   // Create the query for updating students
+  //   const query = `UPDATE students_master SET scheme = ?, scheme_student = 'yes' WHERE stu_id IN (?)`;
   
-    // Create the query for updating students
-    const query = `
-      UPDATE students_master 
-      SET scheme = ?, scheme_student = 'yes'
-      WHERE stu_id IN (?)
-    `;
+  //   db.query(query, [schemeFees, studentIds], (err, result) => {
+  //     if (err) {
+  //       console.error("Error updating students:", err);
+  //       return res.status(500).json({ message: 'Internal server error' });
+  //     }
   
-    db.query(query, [schemeFees, studentIds], (err, result) => {
-      if (err) {
-        console.error("Error updating students:", err);
-        return res.status(500).json({ message: 'Internal server error' });
-      }
-  
-      if (result.affectedRows === 0) {
-        console.log("No rows updated");
-        return res.status(404).json({ message: 'No students found or updated' });
-      } else {
-        console.log("Rows updated successfully");
-        return res.status(200).json({ message: 'Students updated successfully' });
-      }
-    });
-  });
+  //     if (result.affectedRows === 0) {
+  //       console.log("No rows updated");
+  //       return res.status(404).json({ message: 'No students found or updated' });
+  //     } else {
+  //       console.log("Rows updated successfully");
+  //       return res.status(200).json({ message: 'Students updated successfully' });
+  //     }
+  //   });
+  // });
 
   app.put('/vanstudents/:id', async (req, res) => {
   const studentId = req.params.id;

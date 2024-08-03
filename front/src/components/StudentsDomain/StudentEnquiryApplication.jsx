@@ -1096,6 +1096,7 @@ function StudentEnquiryApplication({ onClose }) {
                 console.log("Error:", err);
                 setLoading(false);
             });
+            onClose()
     };
 
     return (
@@ -1253,8 +1254,11 @@ function StudentEnquiryApplication({ onClose }) {
                     </Grid>
                 </Grid>
                 <Box mt={2}>
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button type="submit" variant="contained" color="primary" disabled={loading}>
                         {loading ? <CircularProgress size={24} /> : "Submit"} <Done />
+                    </Button>
+                    <Button onClick={onClose} variant="outlined" color="secondary" style={{ marginLeft: 10 }}>
+                        Cancel
                     </Button>
                 </Box>
             </form>

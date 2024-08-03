@@ -639,6 +639,7 @@ module.exports = (db) => {
 
 
   router.post('/feesallocationforclass', async (req, res) => {
+    console.log(`recive data ;${req.body}`);
     try {
       const { cls_id, tution_fees } = req.body;
   
@@ -646,6 +647,7 @@ module.exports = (db) => {
   
       // Example query to update tuition fees based on class id
       const updateQuery = `UPDATE class SET tution_fees = ? WHERE cls_id = ?`;
+      
   
       // Assuming you have a database connection and db object initialized
       db.query(updateQuery, [tution_fees, cls_id], (err, result) => {
@@ -699,7 +701,7 @@ const [results] = await db.query(getQuery,[cls_id]);
   
       const stu_id = req.params.stu_id;
       const putQuery = `UPDATE students_master SET tution_fees = ?, transport_fees = ?, additional_fees = ?, firstinstallment = ?, secondinstallment = ?, discount = ?, total_fees = ? WHERE stu_id = ?`;
-      const [results] = await db.query(putQuery, [tution_fees, transport_fees, additional_fees, firstinstallment, secondinstallment, discount, total_fees, stu_id]);
+      const [results] = await db.query(putQuery, [tution_fees, transport_fees, additional_fees, firstinstallment, secondinstallment, discount || null, total_fees, stu_id]);
   
       if (results.affectedRows === 0) {
         return res.status(404).json({ message: "Student data not found or no changes made." });
@@ -894,6 +896,8 @@ WHERE stu.stu_id = ?`
     return res.status(500).json({ message: "Internal server error." });
   }
 });
+
+
 router.post('/feeslogdata', async (req, res) => {
   console.log("Received data:", req.body);
   const { stu_id, stu_name, payingfee, remainingfee, feedate, paymentMethod } = req.body;

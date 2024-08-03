@@ -525,13 +525,14 @@ function StudentBookingApplication({ data, onClose }) {
         setErrors({ general: errorMsg });
         setLoading(false);
     });
+    onClose();
 };
     
 
     return (
         <div>
             <h1>Student Booking Form</h1>
-            {loading }
+            {loading}
             {success && <div>Form submitted successfully!</div>}
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
@@ -704,8 +705,8 @@ function StudentBookingApplication({ data, onClose }) {
                     </Grid>
                 </Grid>
                 <Box mt={2}>
-                    <Button type="submit" variant="contained" color="primary">
-                        Submit
+                <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                        {loading ? <CircularProgress size={24} /> : "Submit"} <Done />
                     </Button>
                     <Button onClick={onClose} variant="outlined" color="secondary" style={{ marginLeft: 10 }}>
                         Cancel

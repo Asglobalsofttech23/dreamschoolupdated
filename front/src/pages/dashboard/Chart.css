@@ -19,7 +19,7 @@
 
   .chart-container {
     position: relative;
-    width: 50%;
+    width: 20%;
     margin: auto;
   }
   
@@ -27,11 +27,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100px;
-    height: 100%;
+    width: 20px;
+    height: 30vh;
     z-index: -1; /* Ensure the image is behind the chart */
     opacity: 0.1; /* Adjust opacity to your preference */
     background-size: cover;
+    border-radius: 5px;
     background-position: center;
   }
   

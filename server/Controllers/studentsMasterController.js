@@ -8,6 +8,9 @@ module.exports = (db, upload) => {
 
   router.use(cors());
   router.post("/saveStudents", upload.single("stu_img"), async (req, res) => {
+
+
+    console.log("runnn");
     try {
       const {
         staff_id,
@@ -940,9 +943,11 @@ router.post('/addstudents', (req, res) => {
   const data = req.body;
   console.log('Received data:', data);
 
+  const apply_date = moment().format("YYYY-MM-DD");
+
   const sql = `INSERT INTO students_master 
-    (cls_id, stu_name, gender, dob, community, father_name, father_mobile, mother_name, mother_mobile, address, bookingfees, total_fees, date_of_join) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    (cls_id, stu_name, gender, dob, community, father_name, father_mobile, mother_name, mother_mobile, address, bookingfees, total_fees, date_of_join, apply_date) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(sql, [
     data.cls_id,
@@ -957,7 +962,8 @@ router.post('/addstudents', (req, res) => {
     data.address,
     data.Bookingfees,
     data.totalfees,
-    data.doj
+    data.doj,
+    apply_date
   ], (err, result) => {
     if (err) {
       console.error("Error executing query:", err);

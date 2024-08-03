@@ -9,6 +9,7 @@ const Markallocation = () => {
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
   const [examNames, setExamNames] = useState([]);
+  const [examId, setExamId] = useState(null); // To store selected exam id
 
   const staff_id = sessionStorage.getItem('staff_id');
 
@@ -37,7 +38,7 @@ const Markallocation = () => {
     const fetchExams = async () => {
       try {
         const response = await axios.get(`${config.apiURL}/students/getexamsalloc`);
-        setExamNames(response.data);
+        setExamNames(response.data || []); // Handle empty or null response
       } catch (error) {
         console.error('Error fetching exams:', error);
       }
@@ -65,10 +66,11 @@ const Markallocation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Find the selected exam object using exam name
-    const selectedExamObject = examNames.find(exam => exam.exam_name === selectedExam);
+    if (examId === null) {
+      alert('Please select an exam.');
+      return;
+    }
 
-    // Prepare data to be sent to the backend
     const dataToSave = filteredStudents.map(student => ({
       stu_id: student.stu_id,
       stu_name: student.stu_name,
@@ -79,9 +81,9 @@ const Markallocation = () => {
       social: student.social,
       total: student.total,
       examname: selectedExam, // Include selected exam name
-      exam_id: selectedExamObject.exam_id // Include selected exam id
+      exam_id: examId // Include selected exam id
     }));
-console.log(dataToSave)
+
     try {
       await axios.post(`${config.apiURL}/students/saveStudentMarks`, dataToSave);
       alert('Marks saved successfully!');
@@ -106,7 +108,16 @@ console.log(dataToSave)
 
   // Handle exam selection change
   const handleExamChange = (e) => {
-    setSelectedExam(e.target.value);
+    const examName = e.target.value;
+    setSelectedExam(examName);
+
+    // Set exam ID dynamically based on selected exam
+    const examObject = examNames.find(exam => exam.exam_name === examName);
+    if (examObject) {
+      setExamId(examObject.exam_id); // Set exam ID
+    } else {
+      setExamId(null); // Reset exam ID if exam is not found
+    }
   };
 
   // Filter students based on search query and class filter

@@ -72,7 +72,7 @@ const superadminRoutes = {
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
+      element: <SuperDashboardDefault />
     },
     {
       path:'Booking',
@@ -513,11 +513,11 @@ const employeeRoutes = {
   ]
 };
 
-const MainRoutes = sessionStorage.getItem("super") ? superadminRoutes :
+const MainRoutes = ( sessionStorage.getItem("super") ? superadminRoutes :
   (sessionStorage.getItem("admin") ? adminRoutes :
   (sessionStorage.getItem("employeeLoggedIn") ? employeeRoutes : {
     path: '/',
     element: <Login />
-  }));
+  })));
 
 export default MainRoutes;

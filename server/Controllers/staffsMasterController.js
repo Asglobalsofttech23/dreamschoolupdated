@@ -46,7 +46,7 @@ module.exports = (db, upload) => {
           const [existingStaffResults] = await db.query(existingStaffQuery, [email, mobile]);
 
           if (existingStaffResults.length > 0) {
-              if (existingStaffResults[0].isAlive === 0) {
+              if (existingStaffResults[0].isAlive == 0) {
                   return res.status(400).json({ message: "This employee is waiting for rejoining approval. Please confirm with the principal." });
               } else {
                   return res.status(400).json({ message: "Employee with this email or mobile already exists." });

@@ -128,7 +128,7 @@ const ClassTeach = () => {
 
     return (
         <div>
-            <h1>Staff Allocation Form</h1>
+            <h1>Staffss Allocation Form</h1>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TextField

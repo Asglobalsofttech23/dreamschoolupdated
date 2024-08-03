@@ -181,6 +181,7 @@ import moment from 'moment';
 import axios from 'axios';
 import config from '../../config';
 import { useParams } from 'react-router';
+import { color } from 'framer-motion';
 
 function Invoice() {
   const { feeslogid } = useParams();
@@ -223,12 +224,13 @@ function Invoice() {
             <p>Receipt Date: {moment().format("YYYY-MM-DD")}</p>
             <p>Student Name: {feesslip.stu_name}</p>
             <p>Class: {feesslip.cls_name}</p>
+            <p>Student Id: {feesslip.stu_id}</p>
           </div>
         </header>
 
-        <table className="invoice-table">
+        <table className="invoice-table" >
           <thead>
-            <tr>
+            <tr >
               <th>ITEM #</th>
               <th>ITEM DESCRIPTION</th>
               <th>Method</th>

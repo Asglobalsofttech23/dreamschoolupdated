@@ -92,6 +92,14 @@ import {
     title: 'Teachers Domain',
     type: 'group',
     children: [
+
+      {
+        id: 'Teacher_dashBoard',
+        title: 'DashBoard',
+        type: 'item',
+        url: '/',
+        icon: icons.SchoolIcon
+      },
      
       {
         id: 'class-students',

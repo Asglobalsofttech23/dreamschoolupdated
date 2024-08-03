@@ -11,7 +11,7 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
-const AddVanStudent = (data,onClose) => {
+const AddVanStudent = ({ data, onClose }) => { // Destructure onClose from props
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,17 +74,22 @@ const AddVanStudent = (data,onClose) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post(`${config.apiURL}/addVanStudent`, {
+      const response = await axios.post(`${config.apiURL}/addVanStudent`, {
         studentIds: selectedStudents,
         vanFees: vanFees
       });
-      onClose()
-      alert('Students updated successfully');
-      // Reset form
-      setSelectedClass('');
-      setStudents([]);
-      setSelectedStudents([]);
-      setVanFees('');
+
+      if (response.status === 201) {
+        alert('Students updated successfully');
+        // Reset form
+        setSelectedClass('');
+        setStudents([]);
+        setSelectedStudents([]);
+        setVanFees('');
+        onClose(); // Close the dialog
+      } else {
+        alert('Error updating students');
+      }
     } catch (err) {
       console.log("Error updating students:", err);
       alert('Error updating students');

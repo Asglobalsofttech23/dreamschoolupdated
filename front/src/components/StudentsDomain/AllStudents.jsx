@@ -930,7 +930,7 @@ function AllStudents() {
                 <StyledTableCell align="right">{row.community}</StyledTableCell>
                 <StyledTableCell align="right">{row.address}</StyledTableCell>
                 <StyledTableCell align="right">{row.bookingfees}</StyledTableCell>
-                <StyledTableCell align="right">{row.Totalfees}</StyledTableCell>
+                <StyledTableCell align="right">{row.total_fees}</StyledTableCell>
                 <StyledTableCell align="right">
                   <Link to={`/payfees/${row.stu_id}`}>
                   <Button variant="contained" color='success' fullWidth startIcon={<AddIcon/>} >

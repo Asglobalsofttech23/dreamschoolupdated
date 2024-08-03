@@ -559,7 +559,7 @@ function UpdateStudents({ data, onClose }) {
         mother_mobile: data ? data.mother_mobile : '',
         bookingfees: data ? data.bookingfees : '',
         address: data ? data.address : '',
-        Totalfees: data ? data.Totalfees : ''
+        Totalfees: data ? data.total_fees : ''
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);

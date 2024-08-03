@@ -11,7 +11,7 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
-const AddEcaStudent = (data,onClose) => {
+const AddEcaStudent = ({data,onClose}) => {
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -72,25 +72,47 @@ const AddEcaStudent = (data,onClose) => {
     setVanFees(e.target.value);
   };
 
+  // const handleSubmit = async () => {
+  //   try {
+  //     await axios.post(`${config.apiURL}/addEcaStudent`, {
+  //       studentIds: selectedStudents,
+  //       ecaFees: vanFees
+  //     });
+  //     onClose()
+  //     alert('Students updated successfully');
+  //     // Reset form
+  //     setSelectedClass('');
+  //     setStudents([]);
+  //     setSelectedStudents([]);
+  //     setVanFees('');
+  //   } catch (err) {
+  //     console.log("Error updating students:", err);
+  //     alert('Error updating students');
+  //   }
+  // };
   const handleSubmit = async () => {
     try {
-      await axios.post(`${config.apiURL}/addEcaStudent`, {
+      const response = await axios.post(`${config.apiURL}/addEcaStudent`, {
         studentIds: selectedStudents,
         ecaFees: vanFees
       });
-      onClose()
-      alert('Students updated successfully');
-      // Reset form
-      setSelectedClass('');
-      setStudents([]);
-      setSelectedStudents([]);
-      setVanFees('');
+
+      if (response.status === 201) {
+        alert('Students updated successfully');
+        // Reset form
+        setSelectedClass('');
+        setStudents([]);
+        setSelectedStudents([]);
+        setVanFees('');
+        onClose(); // Close the dialog
+      } else {
+        alert('Error updating students');
+      }
     } catch (err) {
       console.log("Error updating students:", err);
       alert('Error updating students');
     }
   };
-
   const getClassName = (cls_id) => {
     const cls = clsData.find((cls) => cls.cls_id === cls_id);
     return cls ? cls.cls_name : 'Unknown';

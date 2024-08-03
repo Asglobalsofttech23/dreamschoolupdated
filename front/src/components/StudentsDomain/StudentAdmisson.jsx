@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Box, Button, MenuItem, TextField, CircularProgress } from '@mui/material';
+import { Grid, Box, Button, MenuItem, TextField, CircularProgress, } from '@mui/material';
 import { useNavigate } from 'react-router';
 import config from '../../config';
+import { Done } from '@mui/icons-material';
 
 // Function to format date for display
 const formatDate = (dateString) => {
@@ -13,28 +14,30 @@ const formatDate = (dateString) => {
     return `${year}-${month}-${day}`; // Format for input type 'date'
 };
 
-function StudentAdmissionApplication({ data, onClose }) {
+function StudentAdmissionApplication({ data,onClose }) {
     const navigate = useNavigate();
     const [clsData, setClsData] = useState([]);
     const [studentinfo, setStudentinfo] = useState({
-        cls_id: data ? data.cls_id : '',
-        stu_name: data ? data.stu_name : '',
-        stu_aadhar: data ? data.stu_aadhar : '',
+        cls_id: data ? data.class : '',
+        stu_name: data ? data.student_name : '',
+        stu_aadhar: data ? data.aadhar_no : '',
         gender: data ? data.gender : '',
         dob: data ? formatDate(data.dob) : '',
-        doj: data ? formatDate(data.doj) : '',
+        doj: data ? formatDate(data.date_of_join) : '',
         community: data ? data.community : '',
         father_name: data ? data.father_name : '',
         father_mobile: data ? data.father_mobile : '',
         mother_name: data ? data.mother_name : '',
         mother_mobile: data ? data.mother_mobile : '',
-        Bookingfees: data ? data.Bookingfees : '',
+        Bookingfees: data ? data.bookingfees : '',
         totalfees: data ? data.totalfees : '',
         address: data ? data.address : '',
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+
+    console.log(studentinfo);
 
     const handleValidation = (name, value) => {
         let errmsg = "";
@@ -177,7 +180,7 @@ function StudentAdmissionApplication({ data, onClose }) {
 
             const data = await response.json();
 
-            if (response.status === 200) {
+            if (response.status) {
                 console.log("Success", data);
                 setSuccess(true);
                 alert("Success");
@@ -213,6 +216,7 @@ function StudentAdmissionApplication({ data, onClose }) {
         } finally {
             setLoading(false);
         }
+        onClose()
     };
 
     return (
@@ -408,8 +412,8 @@ function StudentAdmissionApplication({ data, onClose }) {
                     </Box>
                 )}
                 <Box mt={2}>
-                    <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                        Submit
+                <Button type="submit" variant="contained" color="primary"  disabled={loading}>
+                        {loading ? onClose() : "Submit"} <Done />
                     </Button>
                     <Button onClick={onClose} variant="outlined" color="secondary" style={{ marginLeft: 10 }}>
                         Cancel

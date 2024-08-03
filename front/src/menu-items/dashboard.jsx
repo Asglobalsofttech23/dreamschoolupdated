@@ -17,11 +17,30 @@ const dashboard = {
       id: 'dashboard',
       title: 'Dashboard',
       type: 'item',
-      url: '/dashboard/default',
+      url: '/',
       icon: icons.DashboardOutlined,
       breadcrumbs: false
     }
   ]
 };
 
-export default dashboard;
+const superdashboard = {
+  id: 'group-dashboard',
+  title: 'Navigation',
+  type: 'group',
+  children: [
+    {
+      id: 'dashboard',
+      title: 'Dashboard',
+      type: 'item',
+      url: '/',
+      icon: icons.DashboardOutlined,
+      breadcrumbs: false
+    }
+  ]
+};
+
+
+const dashboards = sessionStorage.getItem("admin") ? dashboard :
+sessionStorage.getItem("super") ? superdashboard :''
+export default dashboards;

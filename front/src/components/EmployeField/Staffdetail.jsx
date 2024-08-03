@@ -6,10 +6,10 @@ import { color } from 'framer-motion';
 
 function Staffdetail() {
   const [detail, setDetails] = useState([]);
-  const { staff_id } = useParams();
+  const { staff_id } = sessionStorage.getItem("staff_id");
 
   useEffect(() => {
-    axios.get(`${config.apiURL}/staffs/getattenancedetails/${staff_id}`)
+    axios.get(`${config.apiURL}/staffs/getattenancedetails/${sessionStorage.getItem("staff_id")}`)
       .then((res) => {
         setDetails(res.data); // Use res.data to set the details
       })

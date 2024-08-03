@@ -1,5 +1,5 @@
 // project import
-import dashboard from './dashboard';
+import dashboards from './dashboard';
 import pages from './page';
 import utilities from './utilities';
 import studentdomains from './students';
@@ -11,7 +11,7 @@ import FeesDomain from './FeesDomai';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard,studentdomains,teacherdomains,FeesDomain, utilities]
+  items: [dashboards,studentdomains,teacherdomains,FeesDomain, utilities]
 };
 
 export default menuItems;

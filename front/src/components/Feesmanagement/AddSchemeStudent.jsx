@@ -11,7 +11,7 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
-const AddSchmeStudent = (data,onClose) => {
+const AddSchmeStudent = ({data,onClose}) => {
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
