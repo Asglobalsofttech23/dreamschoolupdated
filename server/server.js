@@ -117,39 +117,6 @@ app.use('/upload', studentsUploadExcelController);
 
 
 
-// app.post('/addstudents', (req, res) => {
-//     const data = req.body;
-//     console.log('Received data:', data);
-//     const sql = `INSERT INTO students_data 
-//       (class, student_name, date_of_birth, gender, date_of_join, father_name, father_mobile, mother_name, mother_mobile, address, aadhar_no, community, bookingfees, totalfees) 
-//       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  
-//     db.query(sql, [
-//       data.cls_id, 
-//       data.stu_name, 
-//       data.dob, 
-//       data.gender, 
-//       data.doj, 
-//       data.father_name, 
-//       data.father_mobile, 
-//       data.mother_name, 
-//       data.mother_mobile, 
-//       data.address, 
-//       data.stu_aadhar, 
-//       data.community, 
-//       data.Bookingfees,
-//       data.totalfees
-//     ], (err, result) => {
-//       if (err) {
-//           console.error("Error executing query:", err);
-//           return res.status(500).json({ message: "Internal server error." });
-//       } else {
-//           console.log("Query result:", result);
-//           return res.status(200).json({ message: "Data added successfully." });
-//       }
-//     });
-//   });
-
 
 
 app.put('/allfeesalloc/:stu_id', async (req, res) => {
